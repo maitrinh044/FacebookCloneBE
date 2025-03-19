@@ -22,6 +22,7 @@ public class Friendship {
     @JoinColumn(name = "user_2")
     private User user2;
     @Column
+    @Enumerated(EnumType.STRING)
     private FriendshipTypeEnum type;
     @Column
     private Timestamp createdAt;

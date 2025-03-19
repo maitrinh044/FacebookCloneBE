@@ -24,6 +24,7 @@ public class Message {
     @JoinColumn(name = "receiver_id")
     private User receiverId;
     @Column
+    @Enumerated(EnumType.STRING)
     private MessageTypeEnum type;
     @Column
     private Timestamp sendAt;

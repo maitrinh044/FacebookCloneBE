@@ -21,6 +21,7 @@ public class Notification {
     @Column
     private String content;
     @Column
+    @Enumerated(EnumType.STRING)
     private NotificationTypeEnum type;
     @Column
     private boolean isRead;
