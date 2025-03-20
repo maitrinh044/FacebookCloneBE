@@ -3,29 +3,28 @@ package com.example.FacebookCloneBE.Model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.sql.Timestamp;
 
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "chat_group_member")
-public class ChatGroupMember {
+@Table(name = "comments")
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @ManyToOne
-    @JoinColumn(name = "chat_group_id", nullable = false)
-    private ChatGroup chatGroup;
-
-    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
-    private String role; // ADMIN, MEMBER
+    @ManyToOne
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
-    @Column
-    private Timestamp joinedAt;
+    @Column(nullable = false)
+    private String content;
+
+    @Column(nullable = false, updatable = false)
+    private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
 }
