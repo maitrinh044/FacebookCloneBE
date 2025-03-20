@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "Group")
+@Table(name = "user_group")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
