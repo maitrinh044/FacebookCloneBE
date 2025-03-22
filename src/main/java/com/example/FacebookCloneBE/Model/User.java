@@ -1,10 +1,15 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.mapping.Join;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -18,6 +23,8 @@ public class User {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column
+    private String phone;
     @Column(nullable = false)
     private String firstName;
     @Column
@@ -25,10 +32,18 @@ public class User {
     @Column
     private String profilePicture;
     @Column
+    private String biography;
+    @Column
     private String gender;
     @Column
-    private String birthday;
+    private LocalDate birthday;
     @Column
-    private Timestamp createAt;
+    private boolean isOnline;
+    @Column
+    private LocalDateTime createAt;
+    @OneToMany
+    @JoinColumn(name = "post")
+    @JsonIgnore
+    private List<Post> posts;
 
 }
