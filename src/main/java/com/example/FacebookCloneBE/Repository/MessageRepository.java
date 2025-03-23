@@ -11,8 +11,13 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
     @Query("SELECT msg FROM Message msg WHERE " +
-            "(msg.senderId.id = :senderID AND msg.receiverId.id = :receiverID) " +
-            "OR (msg.senderId.id = :receiverID AND msg.receiverId.id = :senderID)")
-    List<Message> getMessageByUsers(long senderID, long receiverID);
+            "(msg.senderId.id = :senderId AND msg.receiverId.id = :receiverId) " +
+            "OR (msg.senderId.id = :receiverId AND msg.receiverId.id = :senderId)")
+    List<Message> getMessageByUsers(long senderId, long receiverId);
 
+    @Query("SELECT msg FROM Message msg WHERE " +
+            "(msg.senderId.id = :senderId AND msg.receiverId.id = :receiverId) " +
+            "OR (msg.senderId.id = :receiverId AND msg.receiverId.id = :senderId)" +
+            "ORDER BY msg.sendAt DESC LIMIT 1")
+    Message getLastMessageForUser(long senderId, long receiverId);
 }
