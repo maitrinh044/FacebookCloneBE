@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -26,6 +27,36 @@ public class MessageServiceImpl implements MessageService {
         catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    @Override
+    public Optional<MessageDTO> addMessage(MessageDTO messageDTO) {
+        try {
+            Message savedMessage = messageRepository.save(MessageMapper.toEntity(messageDTO));
+            if (savedMessage != null) {
+                return Optional.of(MessageMapper.toMessageDTO(savedMessage));
+            } else {
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<MessageDTO> getLastMessageForUser(long senderId, long receiverId) {
+        try {
+            Message lastMessage = messageRepository.getLastMessageForUser(senderId, receiverId);
+            if (lastMessage != null) {
+                return Optional.of(MessageMapper.toMessageDTO(lastMessage));
+            } else {
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
         }
     }
 }
