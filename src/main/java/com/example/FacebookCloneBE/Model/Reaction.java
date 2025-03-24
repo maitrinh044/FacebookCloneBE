@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.example.FacebookCloneBE.Enum.ReactionType;
 import com.example.FacebookCloneBE.Enum.TargetType;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,11 +10,15 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "likes")
-public class Like {
+@Table(name = "reactions")
+public class Reaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private ReactionType type;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
