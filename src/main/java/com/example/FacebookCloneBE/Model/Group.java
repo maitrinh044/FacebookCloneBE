@@ -1,12 +1,19 @@
 package com.example.FacebookCloneBE.Model;
 
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +21,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "groups")
+@Table(name = "\"groups\"")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +31,13 @@ public class Group {
     private String groupName;
 
     @Column(name = "createAt")
-    private Date createAt;
+    private LocalDateTime createAt;
 
-    @Column(name = "createBy")
-    private String createBy;
+    @JoinColumn(name = "createBy")
+    @ManyToOne
+    private User createBy;
+
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }

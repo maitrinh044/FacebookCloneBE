@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.FriendshipTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -26,4 +27,7 @@ public class Friendship {
     private FriendshipTypeEnum type;
     @Column
     private Timestamp createdAt;
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }

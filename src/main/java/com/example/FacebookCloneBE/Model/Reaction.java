@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.ReactionType;
 import com.example.FacebookCloneBE.Enum.TargetType;
 import jakarta.persistence.*;
@@ -33,4 +34,7 @@ public class Reaction {
 
     @Column(nullable = false, updatable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }
