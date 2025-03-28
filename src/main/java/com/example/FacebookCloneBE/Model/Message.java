@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.MessageTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,4 +30,7 @@ public class Message {
     private MessageTypeEnum type;
     @Column
     private LocalDateTime sendAt;
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }

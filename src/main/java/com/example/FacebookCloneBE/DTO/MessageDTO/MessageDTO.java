@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.DTO.MessageDTO;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.MessageTypeEnum;
 import com.example.FacebookCloneBE.Model.User;
 import jakarta.persistence.*;
@@ -19,4 +20,5 @@ public class MessageDTO {
     private User receiverId;
     private MessageTypeEnum type;
     private LocalDateTime sendAt;
+    private ActiveEnum activeStatus;
 }

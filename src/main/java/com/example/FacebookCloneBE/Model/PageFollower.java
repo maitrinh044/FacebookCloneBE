@@ -4,9 +4,13 @@ import java.sql.Date;
 
 import org.hibernate.annotations.ManyToAny;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
+
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,4 +39,7 @@ public class PageFollower {
 
     @Column(name = "followedAt")
     private Date followedAt;
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }
