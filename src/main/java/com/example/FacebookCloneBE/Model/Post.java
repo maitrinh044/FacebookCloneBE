@@ -18,6 +18,14 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "page_id", nullable = true)
+    private Page page;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = true)
+    private Group group;
+
     @Column(nullable = false)
     private String content;
 
