@@ -18,6 +18,8 @@ public class UserMapper {
         userDTO.setBirthday(user.getBirthday());
         userDTO.setOnline(user.isOnline());
         userDTO.setCreateAt(user.getCreateAt());
+        userDTO.setActiveStatus(user.getActiveStatus());
+        userDTO.setRole(user.getRole());
         return userDTO;
     }
 
@@ -35,6 +37,8 @@ public class UserMapper {
         user.setBirthday(userDTO.getBirthday());
         user.setOnline(userDTO.isOnline());
         user.setCreateAt(userDTO.getCreateAt());
+        user.setActiveStatus(userDTO.getActiveStatus());
+        user.setRole(userDTO.getRole());
         return user;
     }
 

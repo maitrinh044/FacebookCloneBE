@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -27,4 +29,7 @@ public class Comment {
 
     @Column(nullable = false, updatable = false)
     private Timestamp createdAt = new Timestamp(System.currentTimeMillis());
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }

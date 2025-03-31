@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -24,4 +26,8 @@ public class ChatGroup {
 
     @Column
     private Timestamp createdAt;
+
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }

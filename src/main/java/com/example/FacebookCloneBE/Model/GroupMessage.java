@@ -1,11 +1,12 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.MessageTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Data
@@ -27,5 +28,8 @@ public class GroupMessage {
     @Column
     private String content;
     @Column
-    private LocalDateTime sentAt;
+    private Timestamp sentAt;
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }
