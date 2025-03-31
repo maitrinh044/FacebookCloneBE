@@ -21,7 +21,7 @@ public class RequestJoinGroupMapper {
     // Chuyển từ DTO -> Entity
     public static RequestJoinGroup toRJGEntity(RequestJoinGroupDTO dto) {
         RequestJoinGroup entity = new RequestJoinGroup();
-        entity.setId(dto.getId());
+        // entity.setId(dto.getId());
         entity.setUser(dto.getUser());
         entity.setGroup(dto.getGroup());
         entity.setRequestStatus(dto.getRequestStatus());

@@ -9,13 +9,22 @@ public class GroupMapper {
         groupDTO.setGroupID(group.getGroupID());
         groupDTO.setGroupName(group.getGroupName());
         groupDTO.setCreatedAt(group.getCreateAt());
-        ;
         groupDTO.setCreateBy(group.getCreateBy());
         groupDTO.setActiveStatus(group.getActiveStatus());
         return groupDTO;
     }
 
-    public static Group toGroupEntity(GroupDTO groupDTO) {
+    public static Group toGroupEntityPost(GroupDTO groupDTO) {
+        Group group = new Group();
+        // group.setGroupID(groupDTO.getGroupID());
+        group.setGroupName(groupDTO.getGroupName());
+        group.setCreateAt(groupDTO.getCreatedAt());
+        group.setCreateBy(groupDTO.getCreateBy());
+        group.setActiveStatus(groupDTO.getActiveStatus());
+        return group;
+    }
+
+    public static Group toGroupEntityPut(GroupDTO groupDTO) {
         Group group = new Group();
         group.setGroupID(groupDTO.getGroupID());
         group.setGroupName(groupDTO.getGroupName());

@@ -4,7 +4,17 @@ import com.example.FacebookCloneBE.DTO.PageFollwerDTO.*;
 import com.example.FacebookCloneBE.Model.PageFollower;
 
 public class PageFollwerMapper {
-    public static PageFollower toPageFollowerEntity(PageFollowerDTO pfDTO) {
+    public static PageFollower toPageFollowerEntityPOST(PageFollowerDTO pfDTO) {
+        PageFollower pf = new PageFollower();
+        // pf.setId(pfDTO.getId());
+        pf.setPageID(pfDTO.getPageID());
+        pf.setUserID(pfDTO.getUserID());
+        pf.setFollowedAt(pfDTO.getFollowedAt());
+        pf.setActiveStatus(pf.getActiveStatus());
+        return pf;
+    }
+
+    public static PageFollower toPageFollowerEntityPUT(PageFollowerDTO pfDTO) {
         PageFollower pf = new PageFollower();
         pf.setId(pfDTO.getId());
         pf.setPageID(pfDTO.getPageID());
@@ -23,4 +33,5 @@ public class PageFollwerMapper {
         pfDTO.setActiveStatus(pf.getActiveStatus());
         return pfDTO;
     }
+
 }

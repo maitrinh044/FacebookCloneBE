@@ -1,10 +1,7 @@
-package com.example.FacebookCloneBE.DTO.GroupMemberShipDTO;
-
-import java.sql.Date;
+package com.example.FacebookCloneBE.DTO.BankAccountDTO;
 
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
-import com.example.FacebookCloneBE.Enum.RoleEnum;
-import com.example.FacebookCloneBE.Model.Group;
+import com.example.FacebookCloneBE.Model.Bank;
 import com.example.FacebookCloneBE.Model.User;
 
 import lombok.AllArgsConstructor;
@@ -14,11 +11,10 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupMemberShipDTO {
+public class BankAccountDTO {
     private Long id;
-    private Group groupID;
+    private String bankAccountNumber;
     private User userID;
-    private RoleEnum role;
-    private Date joinAt;
+    private Bank bankID;
     private ActiveEnum activeStatus;
 }

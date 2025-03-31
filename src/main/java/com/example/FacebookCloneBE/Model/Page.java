@@ -39,6 +39,7 @@ public class Page {
     @JoinColumn(name = "createdBy")
     @ManyToOne
     private User createdBy;
+
     @Column(name = "active_status")
     @Enumerated(EnumType.STRING)
     private ActiveEnum activeStatus;

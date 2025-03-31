@@ -15,7 +15,18 @@ public class GroupMemberShipMapper {
         return gmsDTO;
     }
 
-    public static GroupMemberShip toGMSEntity(GroupMemberShipDTO gmsDTO) {
+    public static GroupMemberShip toGMSEntityPost(GroupMemberShipDTO gmsDTO) {
+        GroupMemberShip gms = new GroupMemberShip();
+        // gms.setId(gmsDTO.getId());
+        gms.setGroupID(gmsDTO.getGroupID());
+        gms.setUserID(gmsDTO.getUserID());
+        gms.setRole(gmsDTO.getRole());
+        gms.setJoinedAt(gmsDTO.getJoinAt());
+        gms.setActiveStatus(gmsDTO.getActiveStatus());
+        return gms;
+    }
+
+    public static GroupMemberShip toGMSEntityPut(GroupMemberShipDTO gmsDTO) {
         GroupMemberShip gms = new GroupMemberShip();
         gms.setId(gmsDTO.getId());
         gms.setGroupID(gmsDTO.getGroupID());
