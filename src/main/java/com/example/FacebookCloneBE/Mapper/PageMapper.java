@@ -19,7 +19,18 @@ public class PageMapper {
         return pgDTO;
     }
 
-    public static Page toPageEntity(PageDTO pgDTO) {
+    public static Page toPageEntityPOST(PageDTO pgDTO) {
+        Page pg = new Page();
+        // pg.setPageID(pgDTO.getPageID());
+        pg.setPageName(pgDTO.getPageName());
+        pg.setDescription(pgDTO.getDescription());
+        pg.setCreateAt(pgDTO.getCreateAt());
+        pg.setCreatedBy(pgDTO.getCreateBy());
+        pg.setActiveStatus(pgDTO.getActiveStatus());
+        return pg;
+    }
+
+    public static Page toPageEntityPUT(PageDTO pgDTO) {
         Page pg = new Page();
         pg.setPageID(pgDTO.getPageID());
         pg.setPageName(pgDTO.getPageName());

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import lombok.NoArgsConstructor;
 
 @Data

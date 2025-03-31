@@ -1,12 +1,7 @@
 package com.example.FacebookCloneBE.Model;
 
-import java.sql.Date;
-
-import org.hibernate.annotations.ManyToAny;
-
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,24 +18,21 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "PageFollower")
-public class PageFollower {
+@Table(name = "DetailReceipt")
+public class DetailReceipt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "pageID", nullable = false)
+    @JoinColumn(nullable = false)
     @ManyToOne
-    private Page pageID;
+    private Receipt receiptID;
 
-    @JoinColumn(name = "userID", nullable = false)
+    @JoinColumn(nullable = false)
     @ManyToOne
-    private User userID;
+    private DetailGame detailGameID;
 
-    @Column(name = "followedAt")
-    private Date followedAt;
-
-    @Column(name = "active_status")
+    @Column
     @Enumerated(EnumType.STRING)
     private ActiveEnum activeStatus;
 }

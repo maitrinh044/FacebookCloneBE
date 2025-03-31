@@ -10,20 +10,26 @@ import com.example.FacebookCloneBE.Model.Group;
 import com.example.FacebookCloneBE.Model.Post;
 import com.example.FacebookCloneBE.Model.User;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public interface GroupService {
     List<GroupDTO> getAllGroups();
 
     Optional<GroupDTO> getGroupById(Long id);
 
-    Optional<GroupDTO> createGroup(Group gr);
+    Optional<GroupDTO> createGroup(GroupDTO grDTO);
 
-    Optional<GroupDTO> updateGroup(Group gr);
+    Optional<GroupDTO> updateGroup(GroupDTO grDTO);
 
-    Optional<GroupDTO> deleteGroup(Long id); // ko hien thi group cho user
+    @Transactional
+    Optional<GroupDTO> controlDeleteGroup(Long id); // ko hien thi group cho user
 
     List<GroupDTO> getGroupsByAdmin(Long adminId);
 
     List<GroupDTO> getGroupsByName(String keyword);
 
+    boolean checkExistGroup(Long id);
+
+    List<GroupDTO> getGroupSorted(String colum, String order);
 }
