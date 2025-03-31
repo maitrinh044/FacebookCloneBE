@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -27,5 +27,5 @@ public class GroupMessage {
     @Column
     private String content;
     @Column
-    private Timestamp sentAt;
+    private LocalDateTime sentAt;
 }
