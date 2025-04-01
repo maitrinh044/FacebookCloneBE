@@ -31,14 +31,6 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    @JoinColumn(name = "group_id", nullable = true)
-    @ManyToOne
-    private Group group;
-
-    @JoinColumn(name = "page_id", nullable = true)
-    @ManyToOne
-    private Page page;
-
     private String imageUrl;
 
     @Column(nullable = false, updatable = false)
