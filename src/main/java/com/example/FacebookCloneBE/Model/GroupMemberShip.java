@@ -2,6 +2,7 @@ package com.example.FacebookCloneBE.Model;
 
 import java.sql.Date;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.RoleEnum;
 
 import jakarta.persistence.Column;
@@ -40,4 +41,7 @@ public class GroupMemberShip {
 
     @Column(name = "joinedAt")
     private Date joinedAt;
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }

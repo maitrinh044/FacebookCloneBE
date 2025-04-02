@@ -1,11 +1,12 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.FriendshipTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -25,5 +26,8 @@ public class Friendship {
     @Enumerated(EnumType.STRING)
     private FriendshipTypeEnum type;
     @Column
-    private Timestamp createdAt;
+    private LocalDateTime createdAt;
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }
