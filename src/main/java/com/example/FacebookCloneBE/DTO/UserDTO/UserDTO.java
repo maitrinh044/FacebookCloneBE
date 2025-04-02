@@ -5,6 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
+import com.example.FacebookCloneBE.Enum.GenderEnum;
+import com.example.FacebookCloneBE.Model.Role;
+
+import jakarta.persistence.Column;
+
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -21,9 +27,10 @@ public class UserDTO {
     private String password;
     private String profilePicture;
     private String biography;
-    private String gender;
+    private GenderEnum gender;
     private LocalDate birthday;
     private boolean isOnline;
     private LocalDateTime createAt;
+    private ActiveEnum activeStatus;
+    private Role role;
 }
-

@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.NotificationTypeEnum;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -27,4 +28,7 @@ public class Notification {
     private boolean isRead;
     @Column
     private Timestamp createdAt;
+    @Column(name = "active_status")
+    @Enumerated(EnumType.STRING)
+    private ActiveEnum activeStatus;
 }
