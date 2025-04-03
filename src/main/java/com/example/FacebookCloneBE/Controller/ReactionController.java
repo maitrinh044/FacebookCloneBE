@@ -1,6 +1,7 @@
 package com.example.FacebookCloneBE.Controller;
 
 import com.example.FacebookCloneBE.DTO.ReactionDTO.ReactionDTO;
+import com.example.FacebookCloneBE.Enum.ReactionType;
 import com.example.FacebookCloneBE.Enum.TargetType;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
 import com.example.FacebookCloneBE.Service.ReactionService;

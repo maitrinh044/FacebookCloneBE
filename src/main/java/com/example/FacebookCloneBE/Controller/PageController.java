@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.FacebookCloneBE.DTO.PageDTO.PageDTO;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
-import com.example.FacebookCloneBE.Repository.LikeRepository;
+//import com.example.FacebookCloneBE.Repository.LikeRepository;
 import com.example.FacebookCloneBE.Service.PageService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

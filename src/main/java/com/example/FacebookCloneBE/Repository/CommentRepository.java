@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Repository;
 
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

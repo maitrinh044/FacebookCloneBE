@@ -38,8 +38,8 @@ public class PostService {
         return new PostDTO(
             post.getId(),
             post.getUser() != null ? post.getUser().getId() : null,
-            post.getPage() != null ? post.getPage().getId() : null,
-            post.getGroup() != null ? post.getGroup().getId() : null,
+            post.getPage() != null ? post.getPage().getPageID() : null,
+            post.getGroup() != null ? post.getGroup().getGroupID() : null,
             post.getContent(),
             post.getImageUrl(),
             post.getCreatedAt(),

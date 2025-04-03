@@ -32,8 +32,8 @@ public class PostMapper {
         PostDTO dto = new PostDTO();
         dto.setId(post.getId());
         dto.setUserId(post.getUser() != null ? post.getUser().getId() : null);
-        dto.setPageId(post.getPage() != null ? post.getPage().getId() : null);
-        dto.setGroupId(post.getGroup() != null ? post.getGroup().getId() : null);
+        dto.setPageId(post.getPage() != null ? post.getPage().getPageID() : null);
+        dto.setGroupId(post.getGroup() != null ? post.getGroup().getGroupID() : null);
         dto.setContent(post.getContent());
         dto.setImageUrl(post.getImageUrl());
         dto.setCreatedAt(post.getCreatedAt());
