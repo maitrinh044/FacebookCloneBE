@@ -1,6 +1,7 @@
 package com.example.FacebookCloneBE.Service;
 
 import com.example.FacebookCloneBE.DTO.CommentDTO.CommentDTO;
+import com.example.FacebookCloneBE.Mapper.CommentMapper;
 import com.example.FacebookCloneBE.Model.Comment;
 import com.example.FacebookCloneBE.Repository.CommentRepository;
 import com.example.FacebookCloneBE.Enum.ActiveEnum;

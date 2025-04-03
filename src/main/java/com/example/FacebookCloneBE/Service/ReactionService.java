@@ -1,6 +1,7 @@
 package com.example.FacebookCloneBE.Service;
 
 import com.example.FacebookCloneBE.DTO.ReactionDTO.ReactionDTO;
+import com.example.FacebookCloneBE.Mapper.ReactionMapper;
 import com.example.FacebookCloneBE.Model.Reaction;
 import com.example.FacebookCloneBE.Repository.ReactionRepository;
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
