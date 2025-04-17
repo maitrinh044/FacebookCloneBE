@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
 
+import com.example.FacebookCloneBE.Enum.GroupVisibilityEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,4 +42,7 @@ public class Group {
     @Column(name = "active_status")
     @Enumerated(EnumType.STRING)
     private ActiveEnum activeStatus;
+
+    @Column
+    private GroupVisibilityEnum visibility;
 }

@@ -32,6 +32,8 @@ public interface GroupMemberShipService {
 
     Optional<GroupMemberShipDTO> updateMemberRole(Long groupID, Long userID, RoleEnum role);
 
+    List<UserDTO> getGroupMember(Long groupId);
+
     boolean checkExistGroup(Long idGroup);
 
     boolean checkExistUser(Long idUser);
@@ -41,5 +43,5 @@ public interface GroupMemberShipService {
     // boolean approveJoinRequest(Long idGroup, Long idUser);
 
     // boolean rejectJoinRequest(Long idGroup, Long idUser);
-
+    List<GroupDTO> getGroupsByUserId(Long userId);
 }

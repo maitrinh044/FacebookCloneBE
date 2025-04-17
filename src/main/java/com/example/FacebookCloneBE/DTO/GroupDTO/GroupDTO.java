@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
+import com.example.FacebookCloneBE.Enum.GroupVisibilityEnum;
 import com.example.FacebookCloneBE.Model.User;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -22,4 +23,5 @@ public class GroupDTO {
     private LocalDateTime createdAt;
     private User createBy;
     private ActiveEnum activeStatus;
+    private GroupVisibilityEnum visibility;
 }

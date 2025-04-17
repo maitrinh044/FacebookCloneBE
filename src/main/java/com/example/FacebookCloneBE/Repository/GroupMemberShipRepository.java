@@ -44,4 +44,9 @@ public interface GroupMemberShipRepository extends JpaRepository<GroupMemberShip
         Optional<GroupMemberShip> findByGroupIDAndUserID(@Param("groupId") Long groupId,
                         @Param("userId") Long userId);
 
+        @Query("SELECT COUNT(m) FROM GroupMemberShip m WHERE m.groupID.groupID = :groupId")
+        int countMembersByGroupId(@Param("groupId") Long groupId);
+
+        @Query("SELECT gm.userID FROM GroupMemberShip gm WHERE gm.groupID.groupID = :groupId")
+        List<User> findUsersByGroupId(@Param("groupId") Long groupId);
 }

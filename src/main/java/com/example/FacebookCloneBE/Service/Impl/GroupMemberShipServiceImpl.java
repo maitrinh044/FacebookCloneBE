@@ -234,4 +234,40 @@ public class GroupMemberShipServiceImpl implements GroupMemberShipService {
         }
     }
 
+    @Override
+    public List<UserDTO> getGroupMember(Long groupId) {
+        List<User> users = groupMemberShipRepository.findUsersByGroupId((long) groupId);
+        return users.stream()
+                .map(UserMapper::toUserDTO) // hoặc new UserDTO(user)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GroupDTO> getGroupsByUserId(Long userId) {
+        try {
+            // Kiểm tra user có tồn tại không
+            if (!checkExistUser(userId)) {
+                System.out.println("User không tồn tại, không thể lấy danh sách group");
+                return Collections.emptyList();
+            }
+
+            // Lấy user
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isEmpty()) return Collections.emptyList();
+
+            // Lấy danh sách GroupMemberShip
+            List<GroupMemberShip> groupMemberships = groupMemberShipRepository.findByUserID(user.get());
+
+            // Map sang GroupDTO
+            return groupMemberships.stream()
+                    .map(gms -> GroupMapper.toGroupDTO(gms.getGroupID()))
+                    .collect(Collectors.toList());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Lỗi khi lấy danh sách group từ user: " + e.getMessage());
+            return Collections.emptyList();
+        }
+    }
+
 }

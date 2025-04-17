@@ -1,7 +1,9 @@
 package com.example.FacebookCloneBE.Controller;
 
+import com.example.FacebookCloneBE.DTO.GroupDTO.GroupDTO;
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
+import com.example.FacebookCloneBE.Service.GroupMemberShipService;
 import com.example.FacebookCloneBE.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:5173")
@@ -19,6 +22,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private GroupMemberShipService groupMemberShipService;
 
     ResponseData responseData = new ResponseData();
     @GetMapping("/getAllUsers")
@@ -69,6 +75,27 @@ public class UserController {
             responseData.setMessage("Unsuccess");
             responseData.setStatusCode(204);
             return new ResponseEntity<>(responseData, HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @GetMapping("/getGroupsByUserId/{userId}")
+    public ResponseEntity<ResponseData> getGroupsByUserId(@PathVariable("userId") Long userId) {
+        try {
+            List<GroupDTO> list = groupMemberShipService.getGroupsByUserId(userId);
+            if (list.isEmpty()) {
+                responseData.setMessage("User này chưa tham gia nhóm nào.");
+                responseData.setStatusCode(404);
+                return ResponseEntity.status(404).body(responseData);
+            } else {
+                responseData.setData(list);
+                responseData.setMessage("Lấy danh sách nhóm đã tham gia thành công!");
+                responseData.setStatusCode(200);
+                return ResponseEntity.ok(responseData);
+            }
+        } catch (Exception e) {
+            responseData.setStatusCode(500);
+            responseData.setMessage("Lỗi khi lấy danh sách nhóm đã tham gia: " + e.getMessage());
+            return ResponseEntity.status(500).body(responseData);
         }
     }
 }
