@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -56,5 +57,10 @@ public class MediaServiceImpl implements MediaService {
         } catch (Exception e) {
             throw new RuntimeException("Upload failed: " + e.getMessage());
         }
+    }
+
+    @Override
+    public List<Media> getByUserId(Long userId) {
+        return mediaRepository.findByUserId(userId);
     }
 }
