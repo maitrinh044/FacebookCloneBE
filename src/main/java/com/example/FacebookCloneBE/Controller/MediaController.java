@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/media")
@@ -45,4 +45,21 @@ public class MediaController {
             return new ResponseEntity<>(responseData, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/{userId}/all")
+    public ResponseEntity<ResponseData> getAllMediaByUser(@PathVariable Long userId) {
+        ResponseData responseData = new ResponseData();
+        try {
+            List<Media> mediaList = mediaService.getByUserId(userId);
+            responseData.setData(mediaList);
+            responseData.setStatusCode(200);
+            responseData.setMessage("Fetched all media (images & videos) successfully");
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
+        } catch (Exception e) {
+            responseData.setStatusCode(500);
+            responseData.setMessage("Error: " + e.getMessage());
+            return new ResponseEntity<>(responseData, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }
