@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import com.example.FacebookCloneBE.Repository.GroupMemberShipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Sort;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,6 +27,9 @@ public class GroupServiceImpl implements GroupService {
     private GroupRepository groupRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private GroupMemberShipRepository groupMembershipRepository;
 
     @Override
     public List<GroupDTO> getAllGroups() {
@@ -156,6 +160,11 @@ public class GroupServiceImpl implements GroupService {
             // System.out.println("Error when get list group sorted: " + e.getMessage());
             return Collections.emptyList();
         }
+    }
+
+    @Override
+    public int getMemberCountByGroupId(Long groupId) {
+        return groupMembershipRepository.countMembersByGroupId(groupId);
     }
 
 }

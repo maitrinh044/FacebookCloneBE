@@ -10,6 +10,7 @@ public class GroupMapper {
         groupDTO.setGroupName(group.getGroupName());
         groupDTO.setCreatedAt(group.getCreateAt());
         groupDTO.setCreateBy(group.getCreateBy());
+        groupDTO.setVisibility(group.getVisibility());
         groupDTO.setActiveStatus(group.getActiveStatus());
         return groupDTO;
     }
@@ -21,6 +22,7 @@ public class GroupMapper {
         group.setCreateAt(groupDTO.getCreatedAt());
         group.setCreateBy(groupDTO.getCreateBy());
         group.setActiveStatus(groupDTO.getActiveStatus());
+        group.setVisibility(groupDTO.getVisibility());
         return group;
     }
 
@@ -30,6 +32,7 @@ public class GroupMapper {
         group.setGroupName(groupDTO.getGroupName());
         group.setCreateAt(groupDTO.getCreatedAt());
         group.setCreateBy(groupDTO.getCreateBy());
+        group.setVisibility(groupDTO.getVisibility());
         group.setActiveStatus(groupDTO.getActiveStatus());
         return group;
     }

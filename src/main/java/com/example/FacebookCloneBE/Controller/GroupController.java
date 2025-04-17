@@ -1,11 +1,11 @@
 package com.example.FacebookCloneBE.Controller;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
+import com.example.FacebookCloneBE.Service.GroupMemberShipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +25,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class GroupController {
     @Autowired
     private GroupService groupService;
+
     private ResponseData responseData = new ResponseData();
+    @Autowired
+    private GroupMemberShipService groupMemberShipService;
 
     @GetMapping("/getAllGroups")
     public ResponseEntity<ResponseData> getAllGroups() {
@@ -180,4 +183,29 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/getGroupMemberCount/{groupId}")
+    public ResponseEntity<ResponseData> getGroupMemberCount(@PathVariable Long groupId) {
+        int count = groupService.getMemberCountByGroupId(groupId);
+        responseData.setData(count);
+        responseData.setMessage("Get group member count success!");
+        responseData.setStatusCode(200);
+        return ResponseEntity.ok(responseData);
+    }
+
+    @GetMapping("/getGroupMember/{groupId}")
+    public ResponseEntity<ResponseData> getGroupMember(@PathVariable Long groupId) {
+        List<UserDTO> userDTOList = new ArrayList<>();
+        userDTOList = groupMemberShipService.getGroupMember(groupId);
+        if (userDTOList.iterator().hasNext()) {
+            responseData.setData(userDTOList);
+            responseData.setMessage("Get list group member success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } else {
+            responseData.setStatusCode(204);
+            responseData.setMessage("No group member found!");
+            responseData.setData(userDTOList);
+            return new ResponseEntity<>(responseData, HttpStatus.NO_CONTENT);
+        }
+    }
 }
