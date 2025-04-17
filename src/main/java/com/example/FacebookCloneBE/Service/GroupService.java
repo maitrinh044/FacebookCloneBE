@@ -32,4 +32,6 @@ public interface GroupService {
     boolean checkExistGroup(Long id);
 
     List<GroupDTO> getGroupSorted(String colum, String order);
+
+    int getMemberCountByGroupId(Long groupId);
 }
