@@ -17,4 +17,7 @@ public interface UserService {
     public Optional<UserDTO> updateUser(UserDTO userDTO);
 
     public Iterable<UserDTO> getAllFriends(long userId);
+
+    // Tìm người dùng theo email hoặc số điện thoại
+    UserDTO findByEmailOrPhone(String emailOrPhone);
 }

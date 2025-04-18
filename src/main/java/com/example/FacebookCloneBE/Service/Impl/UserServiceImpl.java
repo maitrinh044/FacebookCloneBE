@@ -9,9 +9,7 @@ import com.example.FacebookCloneBE.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -91,6 +89,16 @@ public class UserServiceImpl implements UserService {
         catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    // Tìm người dùng theo email hoặc số điện thoại
+    @Override
+    public UserDTO findByEmailOrPhone(String emailOrPhone) {
+        if (emailOrPhone.contains("@")) {
+            return UserMapper.toUserDTO(userRepository.findByEmail(emailOrPhone).get());  // Tìm theo email
+        } else {
+            return UserMapper.toUserDTO(userRepository.findByEmail(emailOrPhone).get());  // Tìm theo số điện thoại
         }
     }
 
