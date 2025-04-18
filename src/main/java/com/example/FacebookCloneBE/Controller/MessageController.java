@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
+@RequestMapping("/messages")
 public class MessageController {
     @Autowired
     private MessageService messageService;
