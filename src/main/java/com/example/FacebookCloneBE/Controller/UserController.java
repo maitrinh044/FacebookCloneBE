@@ -83,17 +83,18 @@ public class UserController {
             if (list.isEmpty()) {
                 responseData.setMessage("User này chưa tham gia nhóm nào.");
                 responseData.setStatusCode(404);
-                return ResponseEntity.status(404).body(responseData);
+                responseData.setData(null);
+                return new ResponseEntity<>(responseData, HttpStatus.NO_CONTENT);
             } else {
                 responseData.setData(list);
                 responseData.setMessage("Lấy danh sách nhóm đã tham gia thành công!");
                 responseData.setStatusCode(200);
-                return ResponseEntity.ok(responseData);
+                return new ResponseEntity<>(responseData, HttpStatus.OK);
             }
         } catch (Exception e) {
             responseData.setStatusCode(500);
             responseData.setMessage("Lỗi khi lấy danh sách nhóm đã tham gia: " + e.getMessage());
-            return ResponseEntity.status(500).body(responseData);
+            return new ResponseEntity<>(responseData, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
