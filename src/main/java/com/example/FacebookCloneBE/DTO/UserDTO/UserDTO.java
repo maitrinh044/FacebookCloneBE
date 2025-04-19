@@ -26,6 +26,7 @@ public class UserDTO {
     private String phone;
     private String password;
     private String profilePicture;
+    private String coverPhoto;
     private String biography;
     private GenderEnum gender;
     private LocalDate birthday;

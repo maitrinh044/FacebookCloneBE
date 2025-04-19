@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/groups")
 public class GroupController {
     @Autowired
     private GroupService groupService;

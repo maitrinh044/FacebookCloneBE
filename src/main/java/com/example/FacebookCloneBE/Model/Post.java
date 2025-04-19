@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,7 @@ public class Post {
 
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JsonIgnoreProperties("posts")
     private User user;
 
     @ManyToOne

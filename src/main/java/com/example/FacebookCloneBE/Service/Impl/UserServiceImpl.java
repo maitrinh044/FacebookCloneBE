@@ -1,17 +1,18 @@
 package com.example.FacebookCloneBE.Service.Impl;
 
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
+import com.example.FacebookCloneBE.DTO.UserDTO.UserRegisterDTO;
 import com.example.FacebookCloneBE.Mapper.UserMapper;
+import com.example.FacebookCloneBE.Model.Role;
 import com.example.FacebookCloneBE.Model.User;
 import com.example.FacebookCloneBE.Repository.FriendshipRepository;
+import com.example.FacebookCloneBE.Repository.RoleRepository;
 import com.example.FacebookCloneBE.Repository.UserRepository;
 import com.example.FacebookCloneBE.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -21,6 +22,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     @Autowired
     private FriendshipRepository friendshipRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
     @Override
     public Iterable<UserDTO> getAllUsers() {
         try {
@@ -91,6 +95,49 @@ public class UserServiceImpl implements UserService {
         catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
+        }
+    }
+
+    // Tìm người dùng theo email hoặc số điện thoại
+    @Override
+    public Optional<UserDTO> findByEmailOrPhone(String emailOrPhone) {
+        if (emailOrPhone.contains("@")) {
+            // Tìm theo email
+            User user = userRepository.findByEmailOrPhone(emailOrPhone);
+            if (user != null) {
+                return Optional.of(UserMapper.toUserDTO(user));
+            } else {
+                return Optional.empty();
+            }
+        } else {
+            // Tìm theo số điện thoại
+            User user = userRepository.findByEmailOrPhone(emailOrPhone);
+            if (user != null) {
+                return Optional.of(UserMapper.toUserDTO(user));
+            } else {
+                return Optional.empty();
+            }
+
+        }
+    }
+
+
+    @Override
+    public Optional<UserDTO> addRegisterUser(UserRegisterDTO userRegisterDTO) {
+        try {
+            UserMapper userMap = new UserMapper();
+            User user = userMap.toEnTityFromRegister(userRegisterDTO);
+            Role role = roleRepository.getById(2L);
+            user.setRole(role);
+            User savedUser = userRepository.save(user);
+            if (savedUser != null) {
+                return Optional.of(UserMapper.toUserDTO(savedUser));
+            }
+            else {
+                return Optional.empty();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
