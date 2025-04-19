@@ -41,6 +41,9 @@ public class User {
     private String profilePicture;
 
     @Column
+    private String coverPhoto;
+
+    @Column
     private String biography;
 
     @Column

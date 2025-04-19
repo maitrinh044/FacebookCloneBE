@@ -9,16 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
+@RequestMapping("/users")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -85,17 +83,18 @@ public class UserController {
             if (list.isEmpty()) {
                 responseData.setMessage("User này chưa tham gia nhóm nào.");
                 responseData.setStatusCode(404);
-                return ResponseEntity.status(404).body(responseData);
+                responseData.setData(null);
+                return new ResponseEntity<>(responseData, HttpStatus.NO_CONTENT);
             } else {
                 responseData.setData(list);
                 responseData.setMessage("Lấy danh sách nhóm đã tham gia thành công!");
                 responseData.setStatusCode(200);
-                return ResponseEntity.ok(responseData);
+                return new ResponseEntity<>(responseData, HttpStatus.OK);
             }
         } catch (Exception e) {
             responseData.setStatusCode(500);
             responseData.setMessage("Lỗi khi lấy danh sách nhóm đã tham gia: " + e.getMessage());
-            return ResponseEntity.status(500).body(responseData);
+            return new ResponseEntity<>(responseData, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }
