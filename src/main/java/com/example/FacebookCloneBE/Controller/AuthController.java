@@ -3,17 +3,28 @@ package com.example.FacebookCloneBE.Controller;
 
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
 import com.example.FacebookCloneBE.DTO.UserDTO.UserLoginDTO;
+import com.example.FacebookCloneBE.DTO.UserDTO.UserRegisterDTO;
 import com.example.FacebookCloneBE.Model.User;
+import com.example.FacebookCloneBE.Reponse.ResponseData;
 import com.example.FacebookCloneBE.Sercurity.JwtAuthService;
 import com.example.FacebookCloneBE.DTO.JwtResponseDTO.JwtResponseDTO;
 import com.example.FacebookCloneBE.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -24,22 +35,55 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    ResponseData responseData = new ResponseData();
+
 
     // Đăng nhập và trả về JWT Token
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> authenticateUser(@RequestBody UserLoginDTO user) {
+    public ResponseEntity<ResponseData> authenticateUser(@RequestBody @Valid  UserLoginDTO user, BindingResult bindingResult) {
         try {
-            System.out.println(user.getEmailOrPhone());
-            UserDTO userDTO = userService.findByEmailOrPhone(user.getEmailOrPhone());
+            List<String> errors = new ArrayList<>();
+            if (bindingResult.hasErrors()) {
+                // Trả về danh sách lỗi
+                errors = bindingResult.getFieldErrors().stream()
+                        .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                        .collect(Collectors.toList());
+            }
+            Optional<UserDTO> userDTO = userService.findByEmailOrPhone(user.getEmailOrPhone());
+            System.out.println("password: " + user.getPassword());
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
 
-            JwtResponseDTO jwtResponseDTO = jwtAuthService.authenticateUser(userDTO);
+            // In mật khẩu đã mã hóa
+            System.out.println("Mật khẩu đã mã hóa: " + encodedPassword);
+            if (userDTO.isPresent()) {
+                if (!passwordEncoder.matches(user.getPassword(), userDTO.get().getPassword())) {
+                    errors.add("Sai mật khẩu");
+                }
+            } else {
+                errors.add("Email hoặc số điện thoại không chính xác");
+            }
 
-            return ResponseEntity.ok(jwtResponseDTO);
+            if (!errors.isEmpty()) {
+                responseData.setData(errors);
+                responseData.setMessage("Đăng nhập thất bại");
+                responseData.setStatusCode(HttpStatus.BAD_REQUEST.value());
+                return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
+            }
+            JwtResponseDTO jwtResponseDTO = jwtAuthService.authenticateUser(userDTO.get());
+            responseData.setData(jwtResponseDTO);
+            responseData.setStatusCode(204);
+            responseData.setMessage("Đăng nhập thành công");
+            return new ResponseEntity<>(responseData, HttpStatus.OK);
         } catch (Exception e) {
             // Xử lý lỗi nếu thông tin đăng nhập sai
             e.printStackTrace();
-            return ResponseEntity.status(401).body(new JwtResponseDTO("Invalid credentials"));
-
+            responseData.setData(null);
+            responseData.setMessage("Đăng nhập thất bại");
+            responseData.setStatusCode(HttpStatus.BAD_REQUEST.value());
+            return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -108,5 +152,71 @@ public class AuthController {
         UserDTO user = optionalUser.get();
 
         return ResponseEntity.ok(user);
+    }
+
+    // Đăng ký tài khoản user
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody @Valid UserRegisterDTO dto, BindingResult bindingResult) {
+        try {
+            System.out.println("user dto register: " + dto);
+            List<String> errors = new ArrayList<>();
+            if (bindingResult.hasErrors()) {
+                // Trả về danh sách lỗi
+                errors = bindingResult.getFieldErrors().stream()
+                        .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                        .collect(Collectors.toList());
+            }
+            if (dto.getEmailOrPhone() == null) {
+                errors.add("Phải bao gồm số di động hoặc email");
+            } else {
+                // Kiểm tra xem chuỗi có phải số điện thoại hợp lệ (chỉ chứa số và độ dài chính xác 10 chữ số)
+                boolean isPhone = dto.getEmailOrPhone().matches("^0\\d{9}$");
+
+                // Kiểm tra chuỗi có phải là email hợp lệ
+                boolean isEmail = dto.getEmailOrPhone().matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA0-9]{2,7}$");
+
+                if (!isPhone && !isEmail) {
+                    errors.add("Email hoặc số điện thoại không hợp lệ");
+                }
+            }
+
+            if (dto.getEmailOrPhone() != null && !userService.findByEmailOrPhone(dto.getEmailOrPhone()).isEmpty()) {
+                System.out.println("1");
+                errors.add("Email hoặc số điện thoại đã tồn tại");
+            }
+            // Nếu có lỗi, trả về lỗi
+            if (!errors.isEmpty()) {
+                responseData.setData(errors);
+                responseData.setMessage("Có lỗi khi đăng ký");
+                responseData.setStatusCode(505);
+                return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
+            }
+
+            LocalDateTime localDate = LocalDateTime.now();
+            dto.setCreateAt(localDate);
+
+            // Mã hóa mật khẩu
+            String encodedPassword = passwordEncoder.encode(dto.getPassword());
+            dto.setPassword(encodedPassword);  // Đặt mật khẩu đã mã hóa
+            Optional<UserDTO> savedUser = userService.addRegisterUser(dto);
+
+            if (savedUser.isPresent()) {
+                responseData.setData(savedUser.get());
+                responseData.setStatusCode(200);
+                responseData.setMessage("User registered successfully");
+                return new ResponseEntity<>(responseData, HttpStatus.CREATED);
+            } else {
+                responseData.setStatusCode(400);
+                responseData.setMessage("Error registering user");
+                responseData.setData(dto);
+                return new ResponseEntity<>(responseData, HttpStatus.BAD_REQUEST);
+            }
+        } catch (IllegalArgumentException ex) {
+            System.out.println(ex.getMessage());
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Lỗi server!");
+        }
     }
 }

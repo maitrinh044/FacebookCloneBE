@@ -1,16 +1,16 @@
 package com.example.FacebookCloneBE.Mapper;
 
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
-import com.example.FacebookCloneBE.DTO.UserDTO.UserLoginDTO;
+import com.example.FacebookCloneBE.DTO.UserDTO.UserRegisterDTO;
 import com.example.FacebookCloneBE.Model.User;
-import com.example.FacebookCloneBE.Repository.UserRepository;
+import com.example.FacebookCloneBE.Repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import static com.example.FacebookCloneBE.Enum.ActiveEnum.ACTIVE;
 
+@Component
 public class UserMapper {
-
-    private UserRepository userRepository;
 
     public static UserDTO toUserDTO(User user) {
         UserDTO userDTO = new UserDTO();
@@ -52,24 +52,23 @@ public class UserMapper {
         return user;
     }
 
-    private UserDTO toDTOFromUserLoginDTO(UserLoginDTO userLoginDTO) {
-        // Tìm người dùng từ cơ sở dữ liệu qua email hoặc số điện thoại
-        Optional<User> existingUser = userRepository.findByEmailOrPhone(userLoginDTO.getEmailOrPhone());
-
-        // Nếu không tìm thấy người dùng
-        if (existingUser.isEmpty()) {
-            throw new RuntimeException("User not found");
+    public User toEnTityFromRegister(UserRegisterDTO registerDTO) {
+        User user = new User();
+        user.setFirstName(registerDTO.getFirstName());
+        user.setLastName(registerDTO.getLastName());
+        if (registerDTO.getEmailOrPhone() != null) {
+            if (registerDTO.getEmailOrPhone().contains("@")) {
+                user.setEmail(registerDTO.getEmailOrPhone());
+            } else {
+                user.setPhone(registerDTO.getEmailOrPhone());
+            }
         }
+        user.setGender(registerDTO.getGender());
+        user.setPassword(registerDTO.getPassword());
+        user.setBirthday(registerDTO.getBirthday());
+        user.setCreateAt(registerDTO.getCreateAt());
+        user.setActiveStatus(ACTIVE);
 
-        // Lấy User từ Optional
-        User user = existingUser.get();
-
-        // Chuyển đổi từ User sang UserDTO
-        UserDTO userDTO = toUserDTO(user);
-
-        // Trả về UserDTO
-        return userDTO;
+        return user;
     }
-
-
 }

@@ -15,7 +15,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
@@ -27,31 +26,33 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.equals("/auth/register") || path.equals("/auth/login");
+    }
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        // Lấy token từ header "Authorization"
+
         String token = request.getHeader("Authorization");
 
         if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7);  // Lấy phần token sau "Bearer "
+            token = token.substring(7);
             try {
-                // Kiểm tra và lấy thông tin từ token
                 String userId = jwtUtils.getUserIdFromToken(token);
 
-                // Nếu token hợp lệ, xác thực người dùng và đặt vào SecurityContext
                 if (userId != null) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userId, null, null);  // Không cần authorities ở đây
+                            userId, null, null);
                     authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             } catch (Exception e) {
-                // Xử lý lỗi nếu có
                 logger.error("Cannot set user authentication", e);
             }
         }
 
-        // Tiếp tục chuỗi filter
         filterChain.doFilter(request, response);
     }
 }
