@@ -12,7 +12,9 @@ import com.example.FacebookCloneBE.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -139,6 +141,29 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void updateOnlineStatus(Long userId, boolean status) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            user.setOnline(status);  // Cập nhật trạng thái online
+            System.out.println(userId + " is " + status);
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public List<UserDTO> getOnlineFriends(long userId) {
+        Iterable<UserDTO> friends = getAllFriends(userId);
+        List<UserDTO> onlineFriends = new ArrayList<UserDTO>();
+        for (UserDTO friend : friends) {
+            if (friend.isOnline()) {
+                onlineFriends.add(friend);
+            }
+        }
+        return onlineFriends;
     }
 
 }

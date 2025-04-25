@@ -6,6 +6,7 @@ import com.example.FacebookCloneBE.Model.User;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,4 +25,8 @@ public interface UserService {
     public Optional<UserDTO> findByEmailOrPhone(String emailOrPhone);
 
     public Optional<UserDTO> addRegisterUser(UserRegisterDTO userRegisterDTO);
+
+    public void updateOnlineStatus(Long userId, boolean status);
+
+    public List<UserDTO> getOnlineFriends(long userId);
 }
