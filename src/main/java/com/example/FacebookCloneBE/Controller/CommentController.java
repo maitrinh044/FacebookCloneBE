@@ -1,6 +1,7 @@
 package com.example.FacebookCloneBE.Controller;
 
 import com.example.FacebookCloneBE.DTO.CommentDTO.CommentDTO;
+import com.example.FacebookCloneBE.DTO.CommentDTO.CommentDTO_Data;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
 import com.example.FacebookCloneBE.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +15,29 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/comments")
 public class CommentController {
-    @Autowired private CommentService commentService;
+    @Autowired
+    private CommentService commentService;
     private ResponseData responseData = new ResponseData();
 
     @GetMapping("/post/{postId}")
     public ResponseEntity<ResponseData> getByPost(@PathVariable long postId) {
         try {
             List<CommentDTO> comments = commentService.getCommentsByPost(postId);
+            responseData.setData(comments);
+            responseData.setMessage("Success");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            responseData.setMessage("Error: " + e.getMessage());
+            responseData.setStatusCode(500);
+            return ResponseEntity.internalServerError().body(responseData);
+        }
+    }
+
+    @GetMapping("/POST/{postId}")
+    public ResponseEntity<ResponseData> getCommentByPost(@PathVariable("postId") Long postId) {
+        try {
+            List<CommentDTO_Data> comments = commentService.getCommentByPost(postId);
             responseData.setData(comments);
             responseData.setMessage("Success");
             responseData.setStatusCode(200);
