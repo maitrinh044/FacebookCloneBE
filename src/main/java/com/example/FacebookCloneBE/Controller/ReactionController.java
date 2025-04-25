@@ -15,7 +15,8 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping("/reactions")
 public class ReactionController {
-    @Autowired private ReactionService reactionService;
+    @Autowired
+    private ReactionService reactionService;
     private ResponseData responseData = new ResponseData();
 
     @GetMapping("/{targetType}/{targetId}")
