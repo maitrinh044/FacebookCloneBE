@@ -24,4 +24,6 @@ public interface UserService {
     public Optional<UserDTO> findByEmailOrPhone(String emailOrPhone);
 
     public Optional<UserDTO> addRegisterUser(UserRegisterDTO userRegisterDTO);
+
+    public boolean checkExistingUser(Long userId);
 }

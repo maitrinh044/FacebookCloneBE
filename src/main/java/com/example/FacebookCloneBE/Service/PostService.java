@@ -36,15 +36,14 @@ public class PostService {
     // Convert Post entity to PostDTO
     private PostDTO convertToDTO(Post post) {
         return new PostDTO(
-            post.getId(),
-            post.getUser() != null ? post.getUser().getId() : null,
-            post.getPage() != null ? post.getPage().getPageID() : null,
-            post.getGroup() != null ? post.getGroup().getGroupID() : null,
-            post.getContent(),
-            post.getImageUrl(),
-            post.getCreatedAt(),
-            post.getActiveStatus()
-        );
+                post.getId(),
+                post.getUser() != null ? post.getUser().getId() : null,
+                post.getPage() != null ? post.getPage().getPageID() : null,
+                post.getGroup() != null ? post.getGroup().getGroupID() : null,
+                post.getContent(),
+                post.getImageUrl(),
+                post.getCreatedAt(),
+                post.getActiveStatus());
     }
 
     // Get post by ID
@@ -84,29 +83,29 @@ public class PostService {
     // Create new post
     public Optional<PostDTO> createPost(PostDTO postDTO) {
         Post post = new Post();
-        
+
         // Set user
         if (postDTO.getUserId() != null) {
             User user = userRepository.findById(postDTO.getUserId()).orElse(null);
             post.setUser(user);
         }
-        
+
         // Set page (if exists)
         if (postDTO.getPageId() != null) {
             Page page = pageRepository.findById(postDTO.getPageId()).orElse(null);
             post.setPage(page);
         }
-        
+
         // Set group (if exists)
         if (postDTO.getGroupId() != null) {
             Group group = groupRepository.findById(postDTO.getGroupId()).orElse(null);
             post.setGroup(group);
         }
-        
+
         post.setContent(postDTO.getContent());
         post.setImageUrl(postDTO.getImageUrl());
         post.setActiveStatus(postDTO.getActiveStatus() != null ? postDTO.getActiveStatus() : ActiveEnum.ACTIVE);
-        
+
         Post savedPost = postRepository.save(post);
         return Optional.of(convertToDTO(savedPost));
     }
@@ -119,17 +118,17 @@ public class PostService {
                     if (postDTO.getContent() != null) {
                         existingPost.setContent(postDTO.getContent());
                     }
-                    
+
                     // Update image URL if provided
                     if (postDTO.getImageUrl() != null) {
                         existingPost.setImageUrl(postDTO.getImageUrl());
                     }
-                    
+
                     // Update active status if provided
                     if (postDTO.getActiveStatus() != null) {
                         existingPost.setActiveStatus(postDTO.getActiveStatus());
                     }
-                    
+
                     Post updatedPost = postRepository.save(existingPost);
                     return convertToDTO(updatedPost);
                 });
@@ -139,8 +138,8 @@ public class PostService {
     public Optional<PostDTO> controlActivePost(Long id) {
         return postRepository.findById(id)
                 .map(post -> {
-                    ActiveEnum newStatus = post.getActiveStatus() == ActiveEnum.ACTIVE 
-                            ? ActiveEnum.INACTIVE 
+                    ActiveEnum newStatus = post.getActiveStatus() == ActiveEnum.ACTIVE
+                            ? ActiveEnum.INACTIVE
                             : ActiveEnum.ACTIVE;
                     post.setActiveStatus(newStatus);
                     Post updatedPost = postRepository.save(post);
@@ -153,6 +152,16 @@ public class PostService {
         if (postRepository.existsById(id)) {
             postRepository.deleteById(id);
             return true;
+        }
+        return false;
+    }
+
+    public boolean checkExistingPost(Long postId) {
+        List<PostDTO> list = getAllPosts();
+        for (PostDTO postDTO : list) {
+            if (postDTO.getId().equals(postId)) {
+                return true;
+            }
         }
         return false;
     }
