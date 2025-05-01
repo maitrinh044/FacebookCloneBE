@@ -11,7 +11,8 @@ import java.sql.Timestamp;
 @Entity
 @Data
 @NoArgsConstructor
-@Table(name = "reactions")
+@Table(name = "reactions", uniqueConstraints = @UniqueConstraint(columnNames = { "user_id", "target_type",
+        "target_id" }))
 public class Reaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

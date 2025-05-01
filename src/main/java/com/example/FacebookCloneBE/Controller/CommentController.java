@@ -2,12 +2,18 @@ package com.example.FacebookCloneBE.Controller;
 
 import com.example.FacebookCloneBE.DTO.CommentDTO.CommentDTO;
 import com.example.FacebookCloneBE.DTO.CommentDTO.CommentDTO_Data;
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
+import com.example.FacebookCloneBE.Mapper.PostMapper;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
 import com.example.FacebookCloneBE.Service.CommentService;
+import com.example.FacebookCloneBE.Service.PostService;
+import com.example.FacebookCloneBE.Service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +23,10 @@ import java.util.Optional;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PostService postService;
     private ResponseData responseData = new ResponseData();
 
     @GetMapping("/post/{postId}")
@@ -58,6 +68,37 @@ public class CommentController {
             responseData.setStatusCode(201);
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
+            responseData.setMessage("Error: " + e.getMessage());
+            responseData.setStatusCode(500);
+            return ResponseEntity.internalServerError().body(responseData);
+        }
+    }
+
+    @PostMapping("/addComment")
+    public ResponseEntity<ResponseData> addComment(@RequestParam Long userId, @RequestParam Long postId,
+            @RequestParam String content) {
+        try {
+            if (userService.checkExistingUser(userId) && postService.checkExistingPost(postId)) {
+                CommentDTO cmtDTO = new CommentDTO();
+                LocalDateTime now = LocalDateTime.now();
+                java.sql.Timestamp timestamp = java.sql.Timestamp.valueOf(now);
+                cmtDTO.setActiveStatus(ActiveEnum.ACTIVE);
+                cmtDTO.setContent(content);
+                cmtDTO.setCreatedAt(timestamp);
+                cmtDTO.setPostId(postId);
+                cmtDTO.setUserId(userId);
+                CommentDTO created = commentService.createComment(cmtDTO);
+                responseData.setData(created);
+                responseData.setMessage("Comment created");
+                responseData.setStatusCode(201);
+                return ResponseEntity.ok(responseData);
+            } else {
+                responseData.setMessage("Not found user or post existing!");
+                responseData.setStatusCode(404);
+                return ResponseEntity.status(404).body(responseData);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
             responseData.setMessage("Error: " + e.getMessage());
             responseData.setStatusCode(500);
             return ResponseEntity.internalServerError().body(responseData);

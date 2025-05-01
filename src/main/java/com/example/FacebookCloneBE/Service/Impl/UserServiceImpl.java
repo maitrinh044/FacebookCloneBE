@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.StreamSupport;
 
@@ -29,25 +30,26 @@ public class UserServiceImpl implements UserService {
     public Iterable<UserDTO> getAllUsers() {
         try {
             Iterable<User> userList = userRepository.findAll();
-            Iterable<UserDTO> userDTOList = StreamSupport.stream(userList.spliterator(), false).map(UserMapper::toUserDTO).toList();
+            Iterable<UserDTO> userDTOList = StreamSupport.stream(userList.spliterator(), false)
+                    .map(UserMapper::toUserDTO).toList();
             return userDTOList;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
         }
     }
+
     @Override
     public Optional<UserDTO> getUserById(long id) {
         try {
             Optional<User> user = userRepository.findById(id);
             return user.map(UserMapper::toUserDTO);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
     }
+
     @Override
     public Optional<UserDTO> addUser(UserDTO userDTO) {
         try {
@@ -60,12 +62,12 @@ public class UserServiceImpl implements UserService {
                 User savedUser = userRepository.save(user);
                 return Optional.of(UserMapper.toUserDTO(savedUser));
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
     }
+
     @Override
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         try {
@@ -78,8 +80,7 @@ public class UserServiceImpl implements UserService {
                 System.out.println("user does not exist");
                 return Optional.empty();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Optional.empty();
         }
@@ -89,10 +90,10 @@ public class UserServiceImpl implements UserService {
     public Iterable<UserDTO> getAllFriends(long userId) {
         try {
             Iterable<User> friendList = friendshipRepository.getAllFriends(userId);
-            Iterable<UserDTO> friendListDTO = StreamSupport.stream(friendList.spliterator(), false).map(UserMapper::toUserDTO).toList();
+            Iterable<UserDTO> friendListDTO = StreamSupport.stream(friendList.spliterator(), false)
+                    .map(UserMapper::toUserDTO).toList();
             return friendListDTO;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return Collections.emptyList();
         }
@@ -121,7 +122,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
     @Override
     public Optional<UserDTO> addRegisterUser(UserRegisterDTO userRegisterDTO) {
         try {
@@ -132,13 +132,22 @@ public class UserServiceImpl implements UserService {
             User savedUser = userRepository.save(user);
             if (savedUser != null) {
                 return Optional.of(UserMapper.toUserDTO(savedUser));
-            }
-            else {
+            } else {
                 return Optional.empty();
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public boolean checkExistingUser(Long userId) {
+        Iterable<UserDTO> list = getAllUsers();
+        for (UserDTO userDTO : list) {
+            if (userDTO.getId().equals(userId))
+                return true;
+        }
+        return false;
     }
 
 }

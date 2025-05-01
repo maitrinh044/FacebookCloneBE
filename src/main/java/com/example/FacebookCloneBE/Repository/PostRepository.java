@@ -12,7 +12,7 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     // Tìm tất cả bài viết của một user
-    @Query("SELECT p FROM Post p WHERE p.user.id = :userId ORDER BY p.createdAt DESC")
+    @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND activeStatus = 'ACTIVE' ORDER BY p.createdAt DESC")
     List<Post> findByUserId(@Param("userId") Long userId);
 
     // Tìm tất cả bài viết của một page
