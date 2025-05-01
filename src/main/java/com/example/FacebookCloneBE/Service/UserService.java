@@ -26,7 +26,10 @@ public interface UserService {
 
     public Optional<UserDTO> addRegisterUser(UserRegisterDTO userRegisterDTO);
 
+    public boolean checkExistingUser(Long userId);
+
     public void updateOnlineStatus(Long userId, boolean status);
 
     public List<UserDTO> getOnlineFriends(long userId);
+
 }
