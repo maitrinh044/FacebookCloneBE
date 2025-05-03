@@ -31,7 +31,7 @@ public class DetailGame {
     private Game gameID;
 
     @Column
-    private LocalDateTime planDuration;
+    private int planDuration;
 
     @Column
     private Double price;

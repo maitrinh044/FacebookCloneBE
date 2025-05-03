@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/games")
 public class GameController {
     @Autowired
     private GameService gameService;
@@ -96,6 +98,66 @@ public class GameController {
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
             responseData.setMessage("Error when update game!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
+    @PutMapping("/controlActiveStatus/{id}")
+    public ResponseEntity<ResponseData> controlActiveStatus(@PathVariable("id") Long id) {
+        try {
+            Optional<GameDTO> existingGame = gameService.controlActiveStatus(id);
+            if (existingGame.isPresent()) {
+                responseData.setData(existingGame.get());
+                responseData.setMessage("Control activeStatus success!");
+                responseData.setStatusCode(200);
+                return ResponseEntity.ok(responseData);
+            } else {
+                responseData.setMessage("Not found this game");
+                responseData.setStatusCode(404);
+                return ResponseEntity.status(404).body(responseData);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error when control activeStatus game!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ResponseData> search(@RequestParam String keyword) {
+        try {
+            List<GameDTO> list = gameService.getByKeyword(keyword);
+            if (list.iterator().hasNext()) {
+                responseData.setData(list);
+                responseData.setMessage("Get games by keyword success!");
+                responseData.setStatusCode(200);
+                return ResponseEntity.ok(responseData);
+            } else {
+                responseData.setMessage("Not found any game by keyword");
+                responseData.setStatusCode(404);
+                return ResponseEntity.status(404).body(responseData);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error when search game!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
+    @GetMapping("/getAllGameSorted")
+    public ResponseEntity<ResponseData> getAllGameSorted(@RequestParam String column, @RequestParam String order) {
+        try {
+            List<GameDTO> list = gameService.getAllGameSorted(column, order);
+            responseData.setData(list);
+            responseData.setMessage("Get list games sorted success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error when get list games sorted!");
             responseData.setStatusCode(500);
             return ResponseEntity.status(500).body(responseData);
         }

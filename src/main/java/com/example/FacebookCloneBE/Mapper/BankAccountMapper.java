@@ -6,7 +6,7 @@ import com.example.FacebookCloneBE.Model.BankAccount;
 public class BankAccountMapper {
     public static BankAccount toEntityPOST(BankAccountDTO bankAccountDTO) {
         BankAccount bankAccount = new BankAccount();
-        bankAccount.setId(bankAccountDTO.getId());
+        // bankAccount.setId(bankAccountDTO.getId());
         bankAccount.setBankAccountNumber(bankAccountDTO.getBankAccountNumber());
         bankAccount.setBankID(bankAccountDTO.getBankID());
         bankAccount.setUserID(bankAccountDTO.getUserID());
@@ -16,7 +16,7 @@ public class BankAccountMapper {
 
     public static BankAccount toEntityPUT(BankAccountDTO bankAccountDTO) {
         BankAccount bankAccount = new BankAccount();
-        // bankAccount.setId(bankAccountDTO.getId());
+        bankAccount.setId(bankAccountDTO.getId());
         bankAccount.setBankAccountNumber(bankAccountDTO.getBankAccountNumber());
         bankAccount.setBankID(bankAccountDTO.getBankID());
         bankAccount.setUserID(bankAccountDTO.getUserID());
