@@ -19,9 +19,9 @@ public interface GameService {
 
     boolean checkExistingGame(Long id);
 
-    // Optional<GameDTO> controlDelete(Long id);
+    Optional<GameDTO> controlActiveStatus(Long id);
 
-    // List<GameDTO> getByKeyword(String keyword);
+    List<GameDTO> getByKeyword(String keyword);
 
-    // List<GameDTO> getAllGameSorted(String column, String order);
+    List<GameDTO> getAllGameSorted(String column, String order);
 }

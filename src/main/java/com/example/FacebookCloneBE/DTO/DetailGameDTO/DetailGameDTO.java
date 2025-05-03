@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class DetailGameDTO {
     private Long id;
     private Game gameID; // Chỉ lấy ID thay vì toàn bộ entity Game
-    private LocalDateTime planDuration;
+    private int planDuration;
     private Double price;
     private ActiveEnum activeStatus;
 }
