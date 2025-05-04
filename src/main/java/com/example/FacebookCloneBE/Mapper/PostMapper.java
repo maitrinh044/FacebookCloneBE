@@ -38,7 +38,12 @@ public class PostMapper {
         dto.setImageUrl(post.getImageUrl());
         dto.setCreatedAt(post.getCreatedAt());
         dto.setActiveStatus(post.getActiveStatus());
-        
+
+        // Thêm thông tin bài viết gốc (nếu có)
+        if (post.getOriginalPost() != null) {
+            dto.setOriginalPostId(post.getOriginalPost().getId());
+        }
+
         return dto;
     }
 
