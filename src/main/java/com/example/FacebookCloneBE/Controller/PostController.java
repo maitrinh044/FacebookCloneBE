@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.FacebookCloneBE.DTO.PostDTO.PostDTO;
+import com.example.FacebookCloneBE.DTO.ShareDTO.ShareDTO;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
 import com.example.FacebookCloneBE.Service.PostService;
 
@@ -18,24 +19,24 @@ public class PostController {
 
     @Autowired
     private PostService postService;
-    private ResponseData responseData = new ResponseData();
 
     @GetMapping("/getPostByID/{id}")
     public ResponseEntity<ResponseData> getPostById(@PathVariable("id") Long id) {
+        ResponseData responseData = new ResponseData();
         try {
             Optional<PostDTO> post = postService.getPostByID(id);
-            if (post.isPresent()) {
-                responseData.setData(post.get());
+            return post.map(p -> {
+                responseData.setData(p);
                 responseData.setMessage("Get post by id success!");
                 responseData.setStatusCode(200);
                 return ResponseEntity.ok(responseData);
-            } else {
+            }).orElseGet(() -> {
                 responseData.setMessage("Post not found!");
                 responseData.setStatusCode(404);
                 return ResponseEntity.status(404).body(responseData);
-            }
+            });
         } catch (Exception e) {
-            responseData.setMessage("Error when get post by id! " + e.getMessage());
+            responseData.setMessage("Error when getting post by id: " + e.getMessage());
             responseData.setStatusCode(500);
             return ResponseEntity.status(500).body(responseData);
         }
@@ -43,6 +44,7 @@ public class PostController {
 
     @GetMapping("/getAllPosts")
     public ResponseEntity<ResponseData> getAllPosts() {
+        ResponseData responseData = new ResponseData();
         try {
             List<PostDTO> list = postService.getAllPosts();
             if (!list.isEmpty()) {
@@ -56,70 +58,7 @@ public class PostController {
                 return ResponseEntity.status(404).body(responseData);
             }
         } catch (Exception e) {
-            responseData.setMessage("Error when get all posts! " + e.getMessage());
-            responseData.setStatusCode(500);
-            return ResponseEntity.status(500).body(responseData);
-        }
-    }
-
-    @GetMapping("/getPostsByUser/{userId}")
-    public ResponseEntity<ResponseData> getPostsByUser(@PathVariable("userId") Long userId) {
-        try {
-            List<PostDTO> list = postService.getPostsByUser(userId);
-            if (!list.isEmpty()) {
-                responseData.setData(list);
-                responseData.setMessage("Get posts by user success!");
-                responseData.setStatusCode(200);
-                return ResponseEntity.ok(responseData);
-            } else {
-                responseData.setMessage("No posts found for this user!");
-                responseData.setStatusCode(404);
-                return ResponseEntity.status(404).body(responseData);
-            }
-        } catch (Exception e) {
-            responseData.setMessage("Error when get posts by user! " + e.getMessage());
-            responseData.setStatusCode(500);
-            return ResponseEntity.status(500).body(responseData);
-        }
-    }
-
-    @GetMapping("/getPostsByPage/{pageId}")
-    public ResponseEntity<ResponseData> getPostsByPage(@PathVariable("pageId") Long pageId) {
-        try {
-            List<PostDTO> list = postService.getPostsByPage(pageId);
-            if (!list.isEmpty()) {
-                responseData.setData(list);
-                responseData.setMessage("Get posts by page success!");
-                responseData.setStatusCode(200);
-                return ResponseEntity.ok(responseData);
-            } else {
-                responseData.setMessage("No posts found for this page!");
-                responseData.setStatusCode(404);
-                return ResponseEntity.status(404).body(responseData);
-            }
-        } catch (Exception e) {
-            responseData.setMessage("Error when get posts by page! " + e.getMessage());
-            responseData.setStatusCode(500);
-            return ResponseEntity.status(500).body(responseData);
-        }
-    }
-
-    @GetMapping("/getPostsByGroup/{groupId}")
-    public ResponseEntity<ResponseData> getPostsByGroup(@PathVariable("groupId") Long groupId) {
-        try {
-            List<PostDTO> list = postService.getPostsByGroup(groupId);
-            if (!list.isEmpty()) {
-                responseData.setData(list);
-                responseData.setMessage("Get posts by group success!");
-                responseData.setStatusCode(200);
-                return ResponseEntity.ok(responseData);
-            } else {
-                responseData.setMessage("No posts found for this group!");
-                responseData.setStatusCode(404);
-                return ResponseEntity.status(404).body(responseData);
-            }
-        } catch (Exception e) {
-            responseData.setMessage("Error when get posts by group! " + e.getMessage());
+            responseData.setMessage("Error when getting all posts: " + e.getMessage());
             responseData.setStatusCode(500);
             return ResponseEntity.status(500).body(responseData);
         }
@@ -127,73 +66,55 @@ public class PostController {
 
     @PostMapping("/createPost")
     public ResponseEntity<ResponseData> createPost(@RequestBody PostDTO postDTO) {
+        ResponseData responseData = new ResponseData();
         try {
             Optional<PostDTO> newPost = postService.createPost(postDTO);
-            if (newPost.isPresent()) {
-                responseData.setData(newPost.get());
-                responseData.setMessage("Created a post success!");
+            return newPost.map(post -> {
+                responseData.setData(post);
+                responseData.setMessage("Created a post successfully!");
                 responseData.setStatusCode(200);
                 return ResponseEntity.ok(responseData);
-            } else {
+            }).orElseGet(() -> {
                 responseData.setMessage("Failed to create post!");
                 responseData.setStatusCode(400);
                 return ResponseEntity.status(400).body(responseData);
-            }
+            });
         } catch (Exception e) {
+            responseData.setMessage("Error when creating post: " + e.getMessage());
             responseData.setStatusCode(500);
-            responseData.setMessage("Error when creating a post: " + e.getMessage());
             return ResponseEntity.status(500).body(responseData);
         }
     }
 
     @PutMapping("/updatePost")
     public ResponseEntity<ResponseData> updatePost(@RequestBody PostDTO postDTO) {
+        ResponseData responseData = new ResponseData();
         try {
             Optional<PostDTO> updatedPost = postService.updatePost(postDTO);
-            if (updatedPost.isPresent()) {
-                responseData.setData(updatedPost.get());
-                responseData.setMessage("Updated post success!");
+            return updatedPost.map(post -> {
+                responseData.setData(post);
+                responseData.setMessage("Updated post successfully!");
                 responseData.setStatusCode(200);
                 return ResponseEntity.ok(responseData);
-            } else {
+            }).orElseGet(() -> {
                 responseData.setMessage("Post not found!");
                 responseData.setStatusCode(404);
                 return ResponseEntity.status(404).body(responseData);
-            }
+            });
         } catch (Exception e) {
-            responseData.setStatusCode(500);
             responseData.setMessage("Error when updating post: " + e.getMessage());
-            return ResponseEntity.status(500).body(responseData);
-        }
-    }
-
-    @PutMapping("/controlActiveStatusPost/{id}")
-    public ResponseEntity<ResponseData> controlActiveStatusPost(@PathVariable("id") Long id) {
-        try {
-            Optional<PostDTO> updatedPost = postService.controlActivePost(id);
-            if (updatedPost.isPresent()) {
-                responseData.setData(updatedPost.get());
-                responseData.setMessage("Updated activeStatus of post success!");
-                responseData.setStatusCode(200);
-                return ResponseEntity.ok(responseData);
-            } else {
-                responseData.setMessage("Post not found!");
-                responseData.setStatusCode(404);
-                return ResponseEntity.status(404).body(responseData);
-            }
-        } catch (Exception e) {
             responseData.setStatusCode(500);
-            responseData.setMessage("Error when updating activeStatus of post: " + e.getMessage());
             return ResponseEntity.status(500).body(responseData);
         }
     }
 
     @DeleteMapping("/deletePost/{id}")
     public ResponseEntity<ResponseData> deletePost(@PathVariable("id") Long id) {
+        ResponseData responseData = new ResponseData();
         try {
             boolean isDeleted = postService.deletePost(id);
             if (isDeleted) {
-                responseData.setMessage("Deleted post success!");
+                responseData.setMessage("Deleted post successfully!");
                 responseData.setStatusCode(200);
                 return ResponseEntity.ok(responseData);
             } else {
@@ -202,8 +123,35 @@ public class PostController {
                 return ResponseEntity.status(404).body(responseData);
             }
         } catch (Exception e) {
-            responseData.setStatusCode(500);
             responseData.setMessage("Error when deleting post: " + e.getMessage());
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
+    @PostMapping("/shareToProfile")
+    public ResponseEntity<ResponseData> shareToProfile(@RequestBody ShareDTO shareDTO) {
+        ResponseData responseData = new ResponseData();
+        try {
+            Optional<PostDTO> result = postService.sharePostToProfile(
+                    shareDTO.getUserId(),
+                    shareDTO.getOriginalPostId(),
+                    shareDTO.getCaption()
+            );
+
+            return result.map(post -> {
+                responseData.setMessage("Shared to profile successfully!");
+                responseData.setStatusCode(200);
+                responseData.setData(post);
+                return ResponseEntity.ok(responseData);
+            }).orElseGet(() -> {
+                responseData.setMessage("Failed to share post to profile");
+                responseData.setStatusCode(400);
+                return ResponseEntity.status(400).body(responseData);
+            });
+        } catch (Exception e) {
+            responseData.setMessage("Error when sharing post to profile: " + e.getMessage());
+            responseData.setStatusCode(500);
             return ResponseEntity.status(500).body(responseData);
         }
     }
