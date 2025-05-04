@@ -12,13 +12,14 @@ public class PostDTO {
     private String imageUrl;
     private Timestamp createdAt;
     private ActiveEnum activeStatus;
+    private Long originalPostId; // Thêm trường này để lưu bài viết gốc
 
     // Constructors
     public PostDTO() {
     }
 
     public PostDTO(Long id, Long userId, Long pageId, Long groupId, String content, 
-                  String imageUrl, Timestamp createdAt, ActiveEnum activeStatus) {
+                  String imageUrl, Timestamp createdAt, ActiveEnum activeStatus, Long originalPostId) {
         this.id = id;
         this.userId = userId;
         this.pageId = pageId;
@@ -27,6 +28,7 @@ public class PostDTO {
         this.imageUrl = imageUrl;
         this.createdAt = createdAt;
         this.activeStatus = activeStatus;
+        this.originalPostId = originalPostId;
     }
 
     // Getters and Setters
@@ -92,5 +94,13 @@ public class PostDTO {
 
     public void setActiveStatus(ActiveEnum activeStatus) {
         this.activeStatus = activeStatus;
+    }
+
+    public Long getOriginalPostId() {
+        return originalPostId;
+    }
+
+    public void setOriginalPostId(Long originalPostId) {
+        this.originalPostId = originalPostId;
     }
 }

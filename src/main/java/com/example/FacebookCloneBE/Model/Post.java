@@ -41,4 +41,17 @@ public class Post {
     @Column(name = "active_status")
     @Enumerated(EnumType.STRING)
     private ActiveEnum activeStatus;
+
+    @ManyToOne
+    @JoinColumn(name = "original_post_id") // Tham chiếu bài viết gốc
+    private Post originalPost;
+
+    // Getter và Setter cho originalPost
+    public Post getOriginalPost() {
+        return originalPost;
+    }
+
+    public void setOriginalPost(Post originalPost) {
+        this.originalPost = originalPost;
+    }
 }
