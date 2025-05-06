@@ -15,6 +15,9 @@ import com.example.FacebookCloneBE.Model.Page;
 import com.example.FacebookCloneBE.Model.Group;
 import com.example.FacebookCloneBE.Repository.PostRepository;
 import com.example.FacebookCloneBE.Repository.UserRepository;
+
+import io.jsonwebtoken.lang.Collections;
+
 import com.example.FacebookCloneBE.Repository.PageRepository;
 import com.example.FacebookCloneBE.Repository.GroupRepository;
 
@@ -43,8 +46,7 @@ public class PostService {
                 post.getImageUrl(),
                 post.getCreatedAt(),
                 post.getActiveStatus(),
-                post.getOriginalPost() != null ? post.getOriginalPost().getId() : null
-        );
+                post.getOriginalPost() != null ? post.getOriginalPost().getId() : null);
     }
 
     public Optional<PostDTO> getPostByID(Long id) {
@@ -60,20 +62,26 @@ public class PostService {
 
         if (postDTO.getUserId() != null) {
             User user = userRepository.findById(postDTO.getUserId()).orElse(null);
-            if (user != null) post.setUser(user);
-            else return Optional.empty();
+            if (user != null)
+                post.setUser(user);
+            else
+                return Optional.empty();
         }
 
         if (postDTO.getPageId() != null) {
             Page page = pageRepository.findById(postDTO.getPageId()).orElse(null);
-            if (page != null) post.setPage(page);
-            else return Optional.empty();
+            if (page != null)
+                post.setPage(page);
+            else
+                return Optional.empty();
         }
 
         if (postDTO.getGroupId() != null) {
             Group group = groupRepository.findById(postDTO.getGroupId()).orElse(null);
-            if (group != null) post.setGroup(group);
-            else return Optional.empty();
+            if (group != null)
+                post.setGroup(group);
+            else
+                return Optional.empty();
         }
 
         post.setContent(postDTO.getContent());
@@ -86,9 +94,12 @@ public class PostService {
 
     public Optional<PostDTO> updatePost(PostDTO postDTO) {
         return postRepository.findById(postDTO.getId()).map(existingPost -> {
-            if (postDTO.getContent() != null) existingPost.setContent(postDTO.getContent());
-            if (postDTO.getImageUrl() != null) existingPost.setImageUrl(postDTO.getImageUrl());
-            if (postDTO.getActiveStatus() != null) existingPost.setActiveStatus(postDTO.getActiveStatus());
+            if (postDTO.getContent() != null)
+                existingPost.setContent(postDTO.getContent());
+            if (postDTO.getImageUrl() != null)
+                existingPost.setImageUrl(postDTO.getImageUrl());
+            if (postDTO.getActiveStatus() != null)
+                existingPost.setActiveStatus(postDTO.getActiveStatus());
 
             Post updatedPost = postRepository.save(existingPost);
             return convertToDTO(updatedPost);
@@ -101,6 +112,17 @@ public class PostService {
             return true;
         }
         return false;
+    }
+
+    public List<PostDTO> getPostByUser(Long userId) {
+        try {
+            List<Post> list = postRepository.findByUserId(userId);
+            return list.stream().map(this::convertToDTO).toList();
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
     }
 
     public Optional<PostDTO> sharePostToProfile(Long userId, Long originalPostId, String caption) {
@@ -119,10 +141,11 @@ public class PostService {
         }
         return Optional.empty();
     }
+
     // Trong PostService.java
     public boolean checkExistingPost(Long postId) {
-      // Giả sử bạn sử dụng repository để kiểm tra bài viết có tồn tại không
-       return postRepository.existsById(postId);  // Sử dụng method existsById của Spring Data JPA
-}
+        // Giả sử bạn sử dụng repository để kiểm tra bài viết có tồn tại không
+        return postRepository.existsById(postId); // Sử dụng method existsById của Spring Data JPA
+    }
 
 }

@@ -129,6 +129,29 @@ public class PostController {
         }
     }
 
+    @GetMapping("/getPostByUser/{id}")
+    public ResponseEntity<ResponseData> getPostByUser(@PathVariable Long id) {
+        ResponseData responseData = new ResponseData();
+        try {
+            List<PostDTO> list = postService.getPostByUser(id);
+            if (!list.isEmpty()) {
+                responseData.setData(list);
+                responseData.setMessage("Get all posts success!");
+                responseData.setStatusCode(200);
+                return ResponseEntity.ok(responseData);
+            } else {
+                responseData.setMessage("No posts found!");
+                responseData.setStatusCode(404);
+                return ResponseEntity.status(404).body(responseData);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error while get post by user!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
     @PostMapping("/shareToProfile")
     public ResponseEntity<ResponseData> shareToProfile(@RequestBody ShareDTO shareDTO) {
         ResponseData responseData = new ResponseData();
@@ -136,8 +159,7 @@ public class PostController {
             Optional<PostDTO> result = postService.sharePostToProfile(
                     shareDTO.getUserId(),
                     shareDTO.getOriginalPostId(),
-                    shareDTO.getCaption()
-            );
+                    shareDTO.getCaption());
 
             return result.map(post -> {
                 responseData.setMessage("Shared to profile successfully!");
