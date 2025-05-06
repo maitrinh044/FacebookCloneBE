@@ -23,6 +23,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -89,8 +90,10 @@ public class AuthController {
 
     // Làm mới Access Token từ Refresh Token
     @PostMapping("/refresh-token")
-    public ResponseEntity<JwtResponseDTO> refreshToken(@RequestBody String refreshToken) {
+    public ResponseEntity<JwtResponseDTO> refreshToken(@RequestBody Map<String, String> body) {
         try {
+            String refreshToken = body.get("refreshToken");
+            System.out.println("refresh token auth controller: " + refreshToken);
             JwtResponseDTO jwtResponseDTO = jwtAuthService.refreshJwtToken(refreshToken);
             return ResponseEntity.ok(jwtResponseDTO);
         } catch (Exception e) {
