@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserSessionRepository extends JpaRepository<UserSession, Long> {
-    @Query("SELECT user FROM UserSession user WHERE user.refreshToken = :refreshToken")
+    @Query("SELECT u FROM UserSession u WHERE u.refreshToken = :refreshToken")
     Optional<UserSession> findByRefreshToken(@Param("refreshToken") String refreshToken);
 
     @Query("DELETE FROM UserSession WHERE refreshToken like :refreshToken")
