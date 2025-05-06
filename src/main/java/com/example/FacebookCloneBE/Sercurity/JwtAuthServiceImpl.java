@@ -42,8 +42,11 @@ public class JwtAuthServiceImpl implements JwtAuthService {
         String refreshToken = jwtUtils.generateRefreshToken(user);
 
         // Lưu refresh token vào database
-        UserSession userSession = new UserSession(user.getId(), refreshToken, LocalDateTime.now(), LocalDateTime.now().plusDays(1));
+        UserSession userSession = new UserSession(user.getId(), refreshToken, LocalDateTime.now(), LocalDateTime.now().plusDays(5));
+        System.out.print("refresh token: " + refreshToken);
         userSessionRepository.save(userSession);
+        System.out.println("Token trả về client: " + refreshToken); // In trong authenticateUser()
+
         // Lấy thông tin người dùng từ cơ sở dữ liệu, giả sử bạn đã có đối tượng `user`
                 Long userId = user.getId();
                 String email = user.getEmail();
@@ -52,23 +55,37 @@ public class JwtAuthServiceImpl implements JwtAuthService {
         return new JwtResponseDTO(accessToken, refreshToken, userId, email);
     }
 
-    // Làm mới Access Token từ Refresh Token
     public JwtResponseDTO refreshJwtToken(String refreshToken) throws Exception {
-        // Kiểm tra Refresh Token trong DB
-        Optional<UserSession> userSessionOpt = userSessionRepository.findByRefreshToken(refreshToken);
-        if (userSessionOpt.isEmpty()) {
+        System.out.println("refresh token trong auth service impl: " + refreshToken); // In trong refreshJwtToken()
+        System.out.println("refresh token length: " + refreshToken.length());
+        Optional<UserSession> sessionOpt = userSessionRepository.findByRefreshToken(refreshToken);
+        if (sessionOpt.isPresent()) {
+            System.out.println("user session found: " + sessionOpt.get().getId());
+        } else {
+            System.out.println("user session not found");
+        }
+        if (sessionOpt.isEmpty()) {
             throw new Exception("Invalid refresh token");
         }
 
-        // Lấy thông tin User từ DB thông qua User ID
-        User user = userRepository.findById(userSessionOpt.get().getId()).orElseThrow(() -> new Exception("User not found"));
+        UserSession session = sessionOpt.get();
 
-        // Tạo lại Access Token
+        // Kiểm tra hạn
+        if (session.getExpiresAt().isBefore(LocalDateTime.now())) {
+            throw new Exception("Refresh token has expired");
+        }
+
+        // Lấy User từ userId trong session
+        Long userId = session.getUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new Exception("User not found"));
+
+        // Tạo Access Token mới
         String accessToken = jwtUtils.generateAccessToken(UserMapper.toUserDTO(user));
 
-        // Trả về JwtResponseDTO với tất cả các tham số
         return new JwtResponseDTO(accessToken, refreshToken, user.getId(), user.getEmail());
     }
+
 
 
     // Xóa Refresh Token khi logout
