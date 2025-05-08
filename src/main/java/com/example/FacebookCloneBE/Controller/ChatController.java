@@ -25,7 +25,8 @@ public class ChatController {
     public void sendMessage(MessageDTO messageDTO) {
         System.out.println("Tin nhắn nhận được: " + messageDTO);
         // Gửi đến người nhận theo đích danh
-        String receiverTopic = "/topic/messages/" + messageDTO.getReceiverId();
+        String receiverTopic = "/topic/messages/" + messageDTO.getReceiverId().getId();
+        System.out.println("Gửi đến topic: " + receiverTopic);
         messagingTemplate.convertAndSend(receiverTopic, messageDTO);
     }
 
