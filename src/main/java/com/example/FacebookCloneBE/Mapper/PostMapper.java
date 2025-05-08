@@ -31,9 +31,9 @@ public class PostMapper {
 
         PostDTO dto = new PostDTO();
         dto.setId(post.getId());
-        dto.setUserId(post.getUser() != null ? post.getUser().getId() : null);
-        dto.setPageId(post.getPage() != null ? post.getPage().getPageID() : null);
-        dto.setGroupId(post.getGroup() != null ? post.getGroup().getGroupID() : null);
+        dto.setUserId(post.getUser() != null ? post.getUser() : null);
+        dto.setPageId(post.getPage() != null ? post.getPage() : null);
+        dto.setGroupId(post.getGroup() != null ? post.getGroup() : null);
         dto.setContent(post.getContent());
         dto.setImageUrl(post.getImageUrl());
         dto.setCreatedAt(post.getCreatedAt());
@@ -58,19 +58,19 @@ public class PostMapper {
         
         // Set user
         if (postDTO.getUserId() != null) {
-            User user = userRepository.findById(postDTO.getUserId()).orElse(null);
+            User user = userRepository.findById(postDTO.getUserId().getId()).orElse(null);
             post.setUser(user);
         }
         
         // Set page (nếu có)
         if (postDTO.getPageId() != null) {
-            Page page = pageRepository.findById(postDTO.getPageId()).orElse(null);
+            Page page = pageRepository.findById(postDTO.getPageId().getPageID()).orElse(null);
             post.setPage(page);
         }
         
         // Set group (nếu có)
         if (postDTO.getGroupId() != null) {
-            Group group = groupRepository.findById(postDTO.getGroupId()).orElse(null);
+            Group group = groupRepository.findById(postDTO.getGroupId().getGroupID()).orElse(null);
             post.setGroup(group);
         }
         
