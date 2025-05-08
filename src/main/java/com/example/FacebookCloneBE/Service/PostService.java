@@ -39,9 +39,9 @@ public class PostService {
     private PostDTO convertToDTO(Post post) {
         return new PostDTO(
                 post.getId(),
-                post.getUser() != null ? post.getUser().getId() : null,
-                post.getPage() != null ? post.getPage().getPageID() : null,
-                post.getGroup() != null ? post.getGroup().getGroupID() : null,
+                post.getUser() != null ? post.getUser() : null,
+                post.getPage() != null ? post.getPage() : null,
+                post.getGroup() != null ? post.getGroup() : null,
                 post.getContent(),
                 post.getImageUrl(),
                 post.getCreatedAt(),
@@ -61,7 +61,7 @@ public class PostService {
         Post post = new Post();
 
         if (postDTO.getUserId() != null) {
-            User user = userRepository.findById(postDTO.getUserId()).orElse(null);
+            User user = userRepository.findById(postDTO.getUserId().getId()).orElse(null);
             if (user != null)
                 post.setUser(user);
             else
@@ -69,7 +69,7 @@ public class PostService {
         }
 
         if (postDTO.getPageId() != null) {
-            Page page = pageRepository.findById(postDTO.getPageId()).orElse(null);
+            Page page = pageRepository.findById(postDTO.getPageId().getPageID()).orElse(null);
             if (page != null)
                 post.setPage(page);
             else
@@ -77,7 +77,7 @@ public class PostService {
         }
 
         if (postDTO.getGroupId() != null) {
-            Group group = groupRepository.findById(postDTO.getGroupId()).orElse(null);
+            Group group = groupRepository.findById(postDTO.getGroupId().getGroupID()).orElse(null);
             if (group != null)
                 post.setGroup(group);
             else
