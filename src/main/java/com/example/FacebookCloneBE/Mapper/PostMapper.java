@@ -55,30 +55,30 @@ public class PostMapper {
 
         Post post = new Post();
         post.setId(postDTO.getId());
-        
+
         // Set user
         if (postDTO.getUserId() != null) {
             User user = userRepository.findById(postDTO.getUserId().getId()).orElse(null);
             post.setUser(user);
         }
-        
+
         // Set page (nếu có)
         if (postDTO.getPageId() != null) {
             Page page = pageRepository.findById(postDTO.getPageId().getPageID()).orElse(null);
             post.setPage(page);
         }
-        
+
         // Set group (nếu có)
         if (postDTO.getGroupId() != null) {
             Group group = groupRepository.findById(postDTO.getGroupId().getGroupID()).orElse(null);
             post.setGroup(group);
         }
-        
+
         post.setContent(postDTO.getContent());
         post.setImageUrl(postDTO.getImageUrl());
         post.setCreatedAt(postDTO.getCreatedAt());
         post.setActiveStatus(postDTO.getActiveStatus());
-        
+
         return post;
     }
 
@@ -92,15 +92,16 @@ public class PostMapper {
         if (postDTO.getContent() != null) {
             existingPost.setContent(postDTO.getContent());
         }
-        
+
         if (postDTO.getImageUrl() != null) {
             existingPost.setImageUrl(postDTO.getImageUrl());
         }
-        
+
         if (postDTO.getActiveStatus() != null) {
             existingPost.setActiveStatus(postDTO.getActiveStatus());
         }
-        
+
         return existingPost;
     }
+
 }
