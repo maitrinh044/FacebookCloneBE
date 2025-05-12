@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+// import java.security.Timestamp;
+import java.sql.Timestamp;
+
 import java.util.List;
 
 @Repository
@@ -41,4 +44,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // Tìm bài viết theo user và trạng thái active
     @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND p.activeStatus = :activeStatus ORDER BY p.createdAt DESC")
     List<Post> findByUserIdAndActiveStatus(@Param("userId") Long userId, @Param("activeStatus") String activeStatus);
+
+    @Query("SELECT p FROM Post p WHERE p.createdAt BETWEEN :start AND :end ORDER BY p.createdAt DESC")
+    List<Post> findByCreatedAtBetween(@Param("start") Timestamp start, @Param("end") Timestamp end);
+
+    @Query("SELECT p FROM Post p WHERE p.createdAt >= :start ORDER BY p.createdAt DESC")
+    List<Post> findByCreatedAtAfter(@Param("start") Timestamp start);
+
+    @Query("SELECT p FROM Post p WHERE p.createdAt <= :end ORDER BY p.createdAt DESC")
+    List<Post> findByCreatedAtBefore(@Param("end") Timestamp end);
+
 }
