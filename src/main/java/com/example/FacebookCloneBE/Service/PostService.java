@@ -1,7 +1,11 @@
 package com.example.FacebookCloneBE.Service;
 
+// import java.security.Timestamp;
+import java.sql.Timestamp;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.FacebookCloneBE.DTO.PostDTO.PostDTO;
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
+import com.example.FacebookCloneBE.Mapper.PostMapper;
 import com.example.FacebookCloneBE.Model.Post;
 import com.example.FacebookCloneBE.Model.User;
 import com.example.FacebookCloneBE.Model.Page;
@@ -118,6 +123,19 @@ public class PostService {
         return false;
     }
 
+    public Optional<PostDTO> controlActiveStatus(Long id) {
+        Optional<Post> post = postRepository.findById(id);
+        PostDTO postDTO = convertToDTO(post.get());
+        return postRepository.findById(postDTO.getId()).map(existingPost -> {
+            if (postDTO.getActiveStatus() != null)
+                existingPost.setActiveStatus(
+                        postDTO.getActiveStatus() == ActiveEnum.ACTIVE ? ActiveEnum.INACTIVE : ActiveEnum.ACTIVE);
+
+            Post updatedPost = postRepository.save(existingPost);
+            return convertToDTO(updatedPost);
+        });
+    }
+
     public List<PostDTO> getPostByUser(Long userId) {
         try {
             List<Post> list = postRepository.findByUserId(userId);
@@ -159,4 +177,23 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
+    public List<PostDTO> getByKeyword(String keyword) {
+        return postRepository.findByContentContaining(keyword).stream().map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<PostDTO> getByStartAndEnd(Timestamp startTime, Timestamp endtime) {
+        if (startTime != null && endtime != null) {
+            return postRepository.findByCreatedAtBetween(startTime, endtime).stream().map(this::convertToDTO)
+                    .collect(Collectors.toList());
+        } else if (startTime != null) {
+            return postRepository.findByCreatedAtAfter(startTime).stream().map(this::convertToDTO)
+                    .collect(Collectors.toList());
+        } else if (endtime != null) {
+            return postRepository.findByCreatedAtBefore(endtime).stream().map(this::convertToDTO)
+                    .collect(Collectors.toList());
+        } else {
+            return postRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+        }
+    }
 }
