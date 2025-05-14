@@ -194,6 +194,8 @@ public class PostController {
             return ResponseEntity.ok(responseData);
         } catch (Exception e) {
             responseData.setMessage("Lỗi khi lấy bài viết bạn bè: " + e.getMessage());
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
         }
     }
     
