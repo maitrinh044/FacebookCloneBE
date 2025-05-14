@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.FacebookCloneBE.DTO.PostDTO.PostDTO;
@@ -54,7 +55,10 @@ public class PostService {
     }
 
     public List<PostDTO> getAllPosts() {
-        return postRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+        return postRepository.findAll(Sort.by(Sort.Order.desc("createdAt"))) // Sắp xếp theo createdAt giảm dần
+                .stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
     }
 
     public Optional<PostDTO> createPost(PostDTO postDTO) {
@@ -146,6 +150,13 @@ public class PostService {
     public boolean checkExistingPost(Long postId) {
         // Giả sử bạn sử dụng repository để kiểm tra bài viết có tồn tại không
         return postRepository.existsById(postId); // Sử dụng method existsById của Spring Data JPA
+    }
+
+    public List<PostDTO> getFriendPosts(Long userId) {
+        List<Post> friendPosts = postRepository.getFriendPosts(userId); // gọi phương thức trong repository
+        return friendPosts.stream()
+                .map(this::convertToDTO) // chuyển đổi sang DTO
+                .collect(Collectors.toList());
     }
 
 }

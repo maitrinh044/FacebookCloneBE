@@ -12,15 +12,15 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     // Tìm tất cả bài viết của một user
-    @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND activeStatus = 'ACTIVE' ORDER BY p.createdAt DESC")
+    @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND p.activeStatus = 'ACTIVE' ORDER BY p.createdAt DESC")
     List<Post> findByUserId(@Param("userId") Long userId);
 
     // Tìm tất cả bài viết của một page
-    @Query("SELECT p FROM Post p WHERE p.page.id = :pageId ORDER BY p.createdAt DESC")
+    @Query("SELECT p FROM Post p WHERE p.page.pageID = :pageId ORDER BY p.createdAt DESC")
     List<Post> findByPageId(@Param("pageId") Long pageId);
 
     // Tìm tất cả bài viết của một group
-    @Query("SELECT p FROM Post p WHERE p.group.id = :groupId ORDER BY p.createdAt DESC")
+    @Query("SELECT p FROM Post p WHERE p.group.groupID = :groupId ORDER BY p.createdAt DESC")
     List<Post> findByGroupId(@Param("groupId") Long groupId);
 
     // Tìm bài viết theo trạng thái active
@@ -41,4 +41,19 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // Tìm bài viết theo user và trạng thái active
     @Query("SELECT p FROM Post p WHERE p.user.id = :userId AND p.activeStatus = :activeStatus ORDER BY p.createdAt DESC")
     List<Post> findByUserIdAndActiveStatus(@Param("userId") Long userId, @Param("activeStatus") String activeStatus);
+
+    @Query("""
+        SELECT p FROM Post p 
+        WHERE p.activeStatus = 'ACTIVE' AND p.user.id IN (
+            SELECT CASE 
+                WHEN f.user1.id = :userId THEN f.user2.id 
+                ELSE f.user1.id 
+            END
+            FROM Friendship f
+            WHERE f.user1.id = :userId OR f.user2.id = :userId
+        )
+        ORDER BY p.createdAt DESC
+    """)
+    List<Post> getFriendPosts(@Param("userId") Long userId);
+
 }
