@@ -177,4 +177,21 @@ public class PostController {
             return ResponseEntity.status(500).body(responseData);
         }
     }
+
+    @GetMapping("/getFriendPosts/{userId}")
+    public ResponseEntity<ResponseData> getFriendPosts(@PathVariable Long userId) {
+        ResponseData responseData = new ResponseData();
+        try {
+            List<PostDTO> posts = postService.getFriendPosts(userId);
+            responseData.setData(posts);
+            responseData.setMessage("Lấy bài viết của bạn bè thành công!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            responseData.setMessage("Lỗi khi lấy bài viết bạn bè: " + e.getMessage());
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
 }
