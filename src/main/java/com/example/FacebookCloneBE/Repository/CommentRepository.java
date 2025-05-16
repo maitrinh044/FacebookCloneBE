@@ -14,5 +14,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByPostId(long postId);
     List<Comment> findByUserId(long userId);
     List<Comment> findByPostIdAndActiveStatus(long postId, ActiveEnum activeStatus);
+    List<Comment> findByParentCommentIdAndActiveStatus(Long parentCommentId, ActiveEnum activeStatus); // Thêm phương thức này
     long countByPostId(long postId);
 }

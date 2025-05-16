@@ -17,14 +17,17 @@ public class CommentMapper {
     public CommentDTO toDTO(Comment comment) {
         if (comment == null) return null;
         
-        return new CommentDTO(
+        CommentDTO dto = new CommentDTO(
             comment.getId(),
             comment.getUser().getId(),
             comment.getPost().getId(),
+            comment.getParentComment() != null ? comment.getParentComment().getId() : null, // Ánh xạ parentCommentId
             comment.getContent(),
             comment.getCreatedAt(),
             comment.getActiveStatus()
         );
+        // Nếu cần ánh xạ replies, có thể thêm logic ở đây
+        return dto;
     }
 
     public Comment toEntity(CommentDTO commentDTO) {
@@ -34,6 +37,11 @@ public class CommentMapper {
         comment.setId(commentDTO.getId());
         comment.setUser(userRepository.findById(commentDTO.getUserId()).orElse(null));
         comment.setPost(postRepository.findById(commentDTO.getPostId()).orElse(null));
+        if (commentDTO.getParentCommentId() != null) {
+            Comment parent = new Comment();
+            parent.setId(commentDTO.getParentCommentId());
+            comment.setParentComment(parent);
+        }
         comment.setContent(commentDTO.getContent());
         comment.setActiveStatus(commentDTO.getActiveStatus());
         

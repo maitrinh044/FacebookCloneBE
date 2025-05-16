@@ -3,7 +3,6 @@ package com.example.FacebookCloneBE.Controller;
 import com.example.FacebookCloneBE.DTO.CommentDTO.CommentDTO;
 import com.example.FacebookCloneBE.DTO.CommentDTO.CommentDTO_Data;
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
-import com.example.FacebookCloneBE.Mapper.PostMapper;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
 import com.example.FacebookCloneBE.Service.CommentService;
 import com.example.FacebookCloneBE.Service.PostService;
@@ -76,7 +75,7 @@ public class CommentController {
 
     @PostMapping("/addComment")
     public ResponseEntity<ResponseData> addComment(@RequestParam Long userId, @RequestParam Long postId,
-            @RequestParam String content) {
+            @RequestParam String content, @RequestParam(required = false) Long parentCommentId) {
         try {
             if (userService.checkExistingUser(userId) && postService.checkExistingPost(postId)) {
                 CommentDTO cmtDTO = new CommentDTO();
@@ -87,6 +86,7 @@ public class CommentController {
                 cmtDTO.setCreatedAt(timestamp);
                 cmtDTO.setPostId(postId);
                 cmtDTO.setUserId(userId);
+                cmtDTO.setParentCommentId(parentCommentId); // Thêm parentCommentId
                 CommentDTO created = commentService.createComment(cmtDTO);
                 responseData.setData(created);
                 responseData.setMessage("Comment created");
@@ -98,7 +98,39 @@ public class CommentController {
                 return ResponseEntity.status(404).body(responseData);
             }
         } catch (Exception e) {
-            // TODO: handle exception
+            responseData.setMessage("Error: " + e.getMessage());
+            responseData.setStatusCode(500);
+            return ResponseEntity.internalServerError().body(responseData);
+        }
+    }
+
+    @PostMapping("/reply")
+    public ResponseEntity<ResponseData> createReply(@RequestBody CommentDTO commentDTO) {
+        try {
+            if (commentDTO.getParentCommentId() == null) {
+                throw new IllegalArgumentException("Parent comment ID is required for a reply");
+            }
+            CommentDTO created = commentService.createComment(commentDTO);
+            responseData.setData(created);
+            responseData.setMessage("Reply created");
+            responseData.setStatusCode(201);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            responseData.setMessage("Error: " + e.getMessage());
+            responseData.setStatusCode(500);
+            return ResponseEntity.internalServerError().body(responseData);
+        }
+    }
+
+    @GetMapping("/{commentId}/replies")
+    public ResponseEntity<ResponseData> getReplies(@PathVariable long commentId) {
+        try {
+            List<CommentDTO> replies = commentService.getReplies(commentId);
+            responseData.setData(replies);
+            responseData.setMessage("Success");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
             responseData.setMessage("Error: " + e.getMessage());
             responseData.setStatusCode(500);
             return ResponseEntity.internalServerError().body(responseData);
