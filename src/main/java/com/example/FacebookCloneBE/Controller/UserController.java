@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -118,4 +120,21 @@ public class UserController {
             return ResponseEntity.status(500).body(responseData);
         }
     }
+
+    @GetMapping("/findByKeyword/{keyword}")
+    public ResponseEntity<ResponseData> findByKeyword(@PathVariable String keyword) {
+        try {
+            List<UserDTO> list = userService.findByKeyword(keyword);
+            responseData.setData(list);
+            responseData.setMessage("Get users by keyword success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error when get users by keyword!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
 }

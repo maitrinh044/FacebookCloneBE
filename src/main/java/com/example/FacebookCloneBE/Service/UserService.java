@@ -32,4 +32,6 @@ public interface UserService {
 
     public List<UserDTO> getOnlineFriends(long userId);
 
+    public List<UserDTO> findByKeyword(String keyword);
+
 }

@@ -174,4 +174,9 @@ public class UserServiceImpl implements UserService {
         return onlineFriends;
     }
 
+    @Override
+    public List<UserDTO> findByKeyword(String keyword) {
+        return userRepository.findByKeyword(keyword).stream().map(UserMapper::toUserDTO).toList();
+    }
+
 }

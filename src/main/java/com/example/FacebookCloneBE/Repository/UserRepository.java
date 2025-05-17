@@ -13,11 +13,14 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT user FROM User user where user.email = :email")
     User findByEmail(@Param("email") String email);
+
     @Query("SELECT user FROM User user where user.phone = :phone")
     User findByPhoneNumber(@Param("phone") String phone);
+
     @Query("SELECT u FROM User u WHERE u.email = :emailOrPhone OR u.phone = :emailOrPhone")
     User findByEmailOrPhone(@Param("emailOrPhone") String emailOrPhone);
 
-
+    @Query("SELECT u FROM User u WHERE u.email LIKE %:keyword% OR u.phone LIKE %:keyword% OR u.firstName LIKE %:keyword% OR u.lastName LIKE %:keyword%")
+    List<User> findByKeyword(@Param("keyword") String keyword);
 
 }

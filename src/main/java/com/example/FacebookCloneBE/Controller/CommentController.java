@@ -174,4 +174,20 @@ public class CommentController {
             return ResponseEntity.internalServerError().body(responseData);
         }
     }
+
+    @PutMapping("/controlActiveStatus/{id}")
+    public ResponseEntity<ResponseData> controlActive(@PathVariable Long id) {
+        try {
+            Optional<CommentDTO_Data> cmt = commentService.controlActiveStatus(id);
+            responseData.setData(cmt);
+            responseData.setMessage("Control active_status this comment success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error when controlActive this comment");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
 }

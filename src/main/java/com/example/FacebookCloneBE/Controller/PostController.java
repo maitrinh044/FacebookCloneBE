@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import com.example.FacebookCloneBE.DTO.PostDTO.PostDTO;
 import com.example.FacebookCloneBE.DTO.ShareDTO.ShareDTO;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
+import com.example.FacebookCloneBE.Service.ImageAnalysisService;
 import com.example.FacebookCloneBE.Service.PostService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -24,6 +27,9 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private ImageAnalysisService imageAnalysisService;
 
     @GetMapping("/getPostByID/{id}")
     public ResponseEntity<ResponseData> getPostById(@PathVariable("id") Long id) {
@@ -198,7 +204,7 @@ public class PostController {
             return ResponseEntity.status(500).body(responseData);
         }
     }
-    
+
     @PutMapping("/controlActiveStatus/{id}")
     public ResponseEntity<ResponseData> controlActiveStatus(@PathVariable Long id) {
         ResponseData responseData = new ResponseData();
@@ -271,6 +277,24 @@ public class PostController {
             }
         } catch (Exception e) {
             responseData.setMessage("Error occurred while getting posts!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
+    @GetMapping("/imageAnalysis")
+    public ResponseEntity<ResponseData> imageAnalysis(@RequestParam String imageUrl) {
+        // return new String();
+        ResponseData responseData = new ResponseData();
+        try {
+            String caption = imageAnalysisService.analyzeImage(imageUrl);
+            responseData.setData(caption);
+            responseData.setMessage("Get caption by imageAnalysis success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error when get caption by iamgeAnalysis!");
             responseData.setStatusCode(500);
             return ResponseEntity.status(500).body(responseData);
         }

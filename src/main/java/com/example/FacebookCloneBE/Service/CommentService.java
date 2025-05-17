@@ -40,7 +40,8 @@ public class CommentService {
     }
 
     public List<CommentDTO> getReplies(long parentCommentId) {
-        List<Comment> replies = commentRepository.findByParentCommentIdAndActiveStatus(parentCommentId, ActiveEnum.ACTIVE); // Sửa lỗi: đổi "find dane" thành "findByParentCommentIdAndActiveStatus"
+        List<Comment> replies = commentRepository.findByParentCommentIdAndActiveStatus(parentCommentId,
+                ActiveEnum.ACTIVE); // Sửa lỗi: đổi "find dane" thành "findByParentCommentIdAndActiveStatus"
         List<CommentDTO> replyDTOs = new ArrayList<>();
         for (Comment reply : replies) {
             CommentDTO dto = commentMapper.toDTO(reply);
@@ -74,7 +75,8 @@ public class CommentService {
     }
 
     private List<CommentDTO_Data> getRepliesData(long parentCommentId) {
-        List<Comment> replies = commentRepository.findByParentCommentIdAndActiveStatus(parentCommentId, ActiveEnum.ACTIVE);
+        List<Comment> replies = commentRepository.findByParentCommentIdAndActiveStatus(parentCommentId,
+                ActiveEnum.ACTIVE);
         List<CommentDTO_Data> replyDTOs = new ArrayList<>();
         for (Comment reply : replies) {
             CommentDTO_Data dto = CommentMapperData.toDTO(reply);
@@ -117,5 +119,16 @@ public class CommentService {
             return true;
         }
         return false;
+    }
+
+    public Optional<CommentDTO_Data> controlActiveStatus(Long id) {
+        Optional<Comment> cmt = commentRepository.findById(id);
+        if (cmt.isPresent()) {
+            cmt.get().setActiveStatus(
+                    cmt.get().getActiveStatus().equals(ActiveEnum.ACTIVE) ? ActiveEnum.INACTIVE : ActiveEnum.ACTIVE);
+            Comment updateCmt = commentRepository.save(cmt.get());
+            return Optional.of(CommentMapperData.toDTO(updateCmt));
+        }
+        return Optional.empty();
     }
 }
