@@ -62,10 +62,11 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public Optional<FriendshipDTO> addFriendship(FriendshipDTO friendshipDTO) {
         try {
-            Friendship friendship = FriendshipMapper.toEntity(friendshipDTO);
-            friendship.setCreatedAt(LocalDateTime.now());
-            friendship.setActiveStatus(ActiveEnum.ACTIVE);
-            friendship.setType(friendship.getType() != null ? friendship.getType() : FriendshipTypeEnum.PENDING);
+            Friendship friendship = FriendshipMapper.toEntityPOST(friendshipDTO);
+            // friendship.setCreatedAt(LocalDateTime.now());
+            // friendship.setActiveStatus(ActiveEnum.ACTIVE);
+            // friendship.setType(friendship.getType() != null ? friendship.getType() :
+            // FriendshipTypeEnum.PENDING);
             Friendship savedFriendship = friendshipRepository.save(friendship);
             return Optional.of(FriendshipMapper.toDTO(savedFriendship));
         } catch (Exception e) {
