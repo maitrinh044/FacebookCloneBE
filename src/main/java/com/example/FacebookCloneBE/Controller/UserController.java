@@ -64,17 +64,17 @@ public class UserController {
     @GetMapping("/getAllFriends/{userId}")
     public ResponseEntity<ResponseData> getAllFriends(@PathVariable("userId") long userId) {
         Iterable<UserDTO> users = userService.getAllFriends(userId);
-        if (users.iterator().hasNext()) {
-            responseData.setData(users);
-            responseData.setMessage("Success");
-            responseData.setStatusCode(200);
-            return new ResponseEntity<>(responseData, HttpStatus.OK);
-        } else {
-            responseData.setData(null);
-            responseData.setMessage("Unsuccess");
-            responseData.setStatusCode(204);
-            return new ResponseEntity<>(responseData, HttpStatus.NO_CONTENT);
-        }
+        // if (users.iterator().hasNext()) {
+        responseData.setData(users);
+        responseData.setMessage("Success");
+        responseData.setStatusCode(200);
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
+        // } else {
+        // responseData.setData(null);
+        // responseData.setMessage("Unsuccess");
+        // responseData.setStatusCode(204);
+        // return new ResponseEntity<>(responseData, HttpStatus.NO_CONTENT);
+        // }
     }
 
     @GetMapping("/getGroupsByUserId/{userId}")

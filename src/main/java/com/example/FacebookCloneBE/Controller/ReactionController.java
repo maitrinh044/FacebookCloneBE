@@ -186,16 +186,16 @@ public class ReactionController {
     public ResponseEntity<ResponseData> getByUser(@PathVariable("userId") Long userId) {
         try {
             List<Reaction_DTO> list = reactionService.getByUser(userId);
-            if (list.iterator().hasNext()) {
-                responseData.setData(list);
-                responseData.setMessage("Get reactions by userId success!");
-                responseData.setStatusCode(200);
-                return ResponseEntity.ok(responseData);
-            } else {
-                responseData.setMessage("List reactions by userId is empty!");
-                responseData.setStatusCode(404);
-                return ResponseEntity.status(404).body(responseData);
-            }
+            // if (list.iterator().hasNext()) {
+            responseData.setData(list);
+            responseData.setMessage("Get reactions by userId success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+            // } else {
+            // responseData.setMessage("List reactions by userId is empty!");
+            // responseData.setStatusCode(404);
+            // return ResponseEntity.status(404).body(responseData);
+            // }
         } catch (Exception e) {
             // TODO: handle exception
             responseData.setMessage("Error while get reactions by userId!");
