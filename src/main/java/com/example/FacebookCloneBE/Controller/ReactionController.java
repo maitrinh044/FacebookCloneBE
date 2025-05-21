@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Controller;
 
+import com.example.FacebookCloneBE.DTO.ReactionDTO.CountReactionDTO;
 import com.example.FacebookCloneBE.DTO.ReactionDTO.ReactionDTO;
 import com.example.FacebookCloneBE.DTO.ReactionDTO.Reaction_DTO;
 import com.example.FacebookCloneBE.Enum.ReactionType;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:5173")
@@ -200,4 +203,38 @@ public class ReactionController {
             return ResponseEntity.status(500).body(responseData);
         }
     }
+
+    @GetMapping("/top3Reaction")
+    public ResponseEntity<ResponseData> top3Reaction(@RequestParam String targetType, @RequestParam Long targetId) {
+        TargetType tt = null;
+        switch (targetType) {
+            case "POST":
+                tt = TargetType.POST;
+                break;
+            case "COMMENT":
+                tt = TargetType.COMMENT;
+                break;
+            default:
+                break;
+        }
+        try {
+            List<CountReactionDTO> list = reactionService.getTop3ReactionsByTarget(tt, targetId);
+            // if (list.iterator().hasNext()) {
+            responseData.setData(list);
+            responseData.setMessage("Get top 3 reactions success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+            // } else {
+            // responseData.setMessage("List top 3 reactions is empty!");
+            // responseData.setStatusCode(404);
+            // return ResponseEntity.status(404).body(responseData);
+            // }
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error while get top 3 reactions!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
 }

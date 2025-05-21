@@ -12,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.FacebookCloneBE.DTO.PostDTO.CountSharePost;
 import com.example.FacebookCloneBE.DTO.PostDTO.PostDTO;
 import com.example.FacebookCloneBE.DTO.ShareDTO.ShareDTO;
 import com.example.FacebookCloneBE.Reponse.ResponseData;
@@ -295,6 +296,29 @@ public class PostController {
         } catch (Exception e) {
             // TODO: handle exception
             responseData.setMessage("Error when get caption by iamgeAnalysis!");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
+
+    @GetMapping("/getCountSharePost/{postId}")
+    public ResponseEntity<ResponseData> getCountSharePost(@PathVariable Long id) {
+        ResponseData responseData = new ResponseData();
+        try {
+            Optional<CountSharePost> list = postService.getCountSharePost(id);
+
+            if (!list.isEmpty()) {
+                responseData.setData(list);
+                responseData.setMessage("Get count share post by postId success!");
+                responseData.setStatusCode(200);
+                return ResponseEntity.ok(responseData);
+            } else {
+                responseData.setMessage("No posts found!");
+                responseData.setStatusCode(404);
+                return ResponseEntity.status(404).body(responseData);
+            }
+        } catch (Exception e) {
+            responseData.setMessage("Error occurred while counting share post by postId!");
             responseData.setStatusCode(500);
             return ResponseEntity.status(500).body(responseData);
         }

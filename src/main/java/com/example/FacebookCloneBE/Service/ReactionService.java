@@ -1,6 +1,7 @@
 package com.example.FacebookCloneBE.Service;
 
 import com.example.FacebookCloneBE.DTO.PostDTO.PostDTO;
+import com.example.FacebookCloneBE.DTO.ReactionDTO.CountReactionDTO;
 import com.example.FacebookCloneBE.DTO.ReactionDTO.ReactionDTO;
 import com.example.FacebookCloneBE.DTO.ReactionDTO.Reaction_DTO;
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
@@ -19,6 +20,8 @@ import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Enum.ReactionType;
 import com.example.FacebookCloneBE.Enum.TargetType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.security.Timestamp;
@@ -134,6 +137,70 @@ public class ReactionService {
             e.printStackTrace();
             System.err.println("Error while control reaction: " + e.getMessage());
             return Optional.empty();
+        }
+    }
+
+    // public List<CountReactionDTO> getTop3ReactionsByTarget(TargetType targetType,
+    // Long targetId) {
+    // try {
+    // org.springframework.data.domain.Pageable pageable = PageRequest.of(0, 3);
+    // List<Object[]> results =
+    // reactionRepository.findTop3ReactionsByPostId(targetType, targetId, pageable);
+    // List<Reaction_DTO> list;
+    // return results.stream().map(result -> {
+    // CountReactionDTO crDTO = new CountReactionDTO();
+    // // crDTO.set((ReactionType) result[0]); // Lấy loại reaction
+    // // dto.setCount((Long) result[1]); // Lấy số lượng
+    // // return dto;
+    // ReactionType rt = null;
+    // switch ((String) result[0]) {
+    // case "LIKE":
+    // rt = ReactionType.LIKE;
+    // break;
+    // case "LOVE":
+    // rt = ReactionType.LOVE;
+    // break;
+    // case "HAHA":
+    // rt = ReactionType.HAHA;
+    // break;
+    // case "WOW":
+    // rt = ReactionType.WOW;
+    // break;
+    // case "SAD":
+    // rt = ReactionType.SAD;
+    // break;
+    // case "ANGRY":
+    // rt = ReactionType.ANGRY;
+    // break;
+    // default:
+    // break;
+    // }
+    // crDTO.setReactionType(rt);
+    // crDTO.setCount((int) result[1]);
+    // return crDTO;
+    // }).toList();
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return Collections.emptyList();
+    // }
+    // }
+    public List<CountReactionDTO> getTop3ReactionsByTarget(TargetType targetType, Long targetId) {
+        try {
+            org.springframework.data.domain.Pageable pageable = PageRequest.of(0, 3);
+            List<Object[]> results = reactionRepository.findTop3ReactionsByPostId(targetType, targetId, pageable);
+
+            return results.stream().map(result -> {
+                CountReactionDTO crDTO = new CountReactionDTO();
+                // Lấy loại reaction từ result[0] và cast sang ReactionType
+                ReactionType reactionType = (ReactionType) result[0]; // Đảm bảo rằng đây là loại enum
+                crDTO.setReactionType(reactionType);
+                crDTO.setCount(((Number) result[1]).intValue()); // Sử dụng Number để lấy giá trị count
+
+                return crDTO;
+            }).toList();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Collections.emptyList();
         }
     }
 }

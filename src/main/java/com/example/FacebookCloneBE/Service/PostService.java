@@ -9,11 +9,15 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.example.FacebookCloneBE.DTO.PostDTO.CountSharePost;
 import com.example.FacebookCloneBE.DTO.PostDTO.PostDTO;
+import com.example.FacebookCloneBE.DTO.ReactionDTO.CountReactionDTO;
 import com.example.FacebookCloneBE.Enum.ActiveEnum;
+import com.example.FacebookCloneBE.Enum.ReactionType;
 import com.example.FacebookCloneBE.Mapper.PostMapper;
 import com.example.FacebookCloneBE.Model.Post;
 import com.example.FacebookCloneBE.Model.User;
@@ -194,6 +198,25 @@ public class PostService {
                     .collect(Collectors.toList());
         } else {
             return postRepository.findAll().stream().map(this::convertToDTO).collect(Collectors.toList());
+        }
+    }
+
+    public Optional<CountSharePost> getCountSharePost(Long postId) {
+        try {
+            List<Object[]> results = postRepository.getCountSharePost(postId);
+
+            if (results.isEmpty()) {
+                return Optional.empty(); // Trả về Optional.empty() nếu không có kết quả
+            }
+
+            Object[] result = results.get(0); // Lấy kết quả đầu tiên
+            CountSharePost csp = new CountSharePost();
+            csp.setPostId(((Number) result[0]).intValue()); // Lấy postId
+            csp.setCount(((Number) result[1]).intValue()); // Lấy số lượng chia sẻ
+            return Optional.of(csp); // Trả về Optional chứa csp
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty(); // Trả về Optional.empty() nếu có lỗi
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.FacebookCloneBE.Repository;
 
+import com.example.FacebookCloneBE.Enum.TargetType;
 import com.example.FacebookCloneBE.Model.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -46,19 +47,19 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByUserIdAndActiveStatus(@Param("userId") Long userId, @Param("activeStatus") String activeStatus);
 
     @Query("""
-        SELECT p FROM Post p 
-        WHERE p.activeStatus = 'ACTIVE' AND p.user.id IN (
-            SELECT CASE 
-                WHEN f.user1.id = :userId THEN f.user2.id 
-                ELSE f.user1.id 
-            END
-            FROM Friendship f
-            WHERE f.user1.id = :userId OR f.user2.id = :userId
-        )
-        ORDER BY p.createdAt DESC
-    """)
+                SELECT p FROM Post p
+                WHERE p.activeStatus = 'ACTIVE' AND p.user.id IN (
+                    SELECT CASE
+                        WHEN f.user1.id = :userId THEN f.user2.id
+                        ELSE f.user1.id
+                    END
+                    FROM Friendship f
+                    WHERE f.user1.id = :userId OR f.user2.id = :userId
+                )
+                ORDER BY p.createdAt DESC
+            """)
     List<Post> getFriendPosts(@Param("userId") Long userId);
-    
+
     @Query("SELECT p FROM Post p WHERE p.createdAt BETWEEN :start AND :end ORDER BY p.createdAt DESC")
     List<Post> findByCreatedAtBetween(@Param("start") Timestamp start, @Param("end") Timestamp end);
 
@@ -68,4 +69,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT p FROM Post p WHERE p.createdAt <= :end ORDER BY p.createdAt DESC")
     List<Post> findByCreatedAtBefore(@Param("end") Timestamp end);
 
+    @Query("SELECT p.id, COUNT(p.originalPost) AS count FROM Post p WHERE p.id = :postId GROUP BY p.id")
+    List<Object[]> getCountSharePost(@Param("postId") Long postId);
 }
