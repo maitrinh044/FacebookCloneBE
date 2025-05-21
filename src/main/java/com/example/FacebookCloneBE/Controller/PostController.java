@@ -302,10 +302,10 @@ public class PostController {
     }
 
     @GetMapping("/getCountSharePost/{postId}")
-    public ResponseEntity<ResponseData> getCountSharePost(@PathVariable Long id) {
+    public ResponseEntity<ResponseData> getCountSharePost(@PathVariable Long postId) {
         ResponseData responseData = new ResponseData();
         try {
-            Optional<CountSharePost> list = postService.getCountSharePost(id);
+            Optional<CountSharePost> list = postService.getCountSharePost(postId);
 
             if (!list.isEmpty()) {
                 responseData.setData(list);
