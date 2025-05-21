@@ -137,4 +137,19 @@ public class UserController {
         }
     }
 
+    @PutMapping("/controlActiveStatus/{userId}")
+    public ResponseEntity<ResponseData> controlActiveStatus(@PathVariable Long userId) {
+        try {
+            Optional<UserDTO> user = userService.controlActive(userId);
+            responseData.setData(user);
+            responseData.setMessage("Control activeStatus of user success!");
+            responseData.setStatusCode(200);
+            return ResponseEntity.ok(responseData);
+        } catch (Exception e) {
+            // TODO: handle exception
+            responseData.setMessage("Error when control activeStatus of user");
+            responseData.setStatusCode(500);
+            return ResponseEntity.status(500).body(responseData);
+        }
+    }
 }

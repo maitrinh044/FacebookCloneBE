@@ -34,4 +34,6 @@ public interface UserService {
 
     public List<UserDTO> findByKeyword(String keyword);
 
+    public Optional<UserDTO> controlActive(Long userId);
+
 }

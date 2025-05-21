@@ -2,6 +2,7 @@ package com.example.FacebookCloneBE.Service.Impl;
 
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
 import com.example.FacebookCloneBE.DTO.UserDTO.UserRegisterDTO;
+import com.example.FacebookCloneBE.Enum.ActiveEnum;
 import com.example.FacebookCloneBE.Mapper.UserMapper;
 import com.example.FacebookCloneBE.Model.Role;
 import com.example.FacebookCloneBE.Model.User;
@@ -177,6 +178,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDTO> findByKeyword(String keyword) {
         return userRepository.findByKeyword(keyword).stream().map(UserMapper::toUserDTO).toList();
+    }
+
+    @Override
+    public Optional<UserDTO> controlActive(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isPresent()) {
+            user.get().setActiveStatus(
+                    user.get().getActiveStatus().equals(ActiveEnum.ACTIVE) ? ActiveEnum.INACTIVE : ActiveEnum.ACTIVE);
+            User updatedUser = userRepository.save(user.get());
+            return Optional.of(UserMapper.toUserDTO(updatedUser));
+        }
+        return Optional.empty();
     }
 
 }
