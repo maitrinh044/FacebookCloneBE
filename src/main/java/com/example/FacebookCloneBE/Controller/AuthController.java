@@ -1,6 +1,5 @@
 package com.example.FacebookCloneBE.Controller;
 
-
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
 import com.example.FacebookCloneBE.DTO.UserDTO.UserLoginDTO;
 import com.example.FacebookCloneBE.DTO.UserDTO.UserRegisterDTO;
@@ -41,10 +40,10 @@ public class AuthController {
 
     ResponseData responseData = new ResponseData();
 
-
     // Đăng nhập và trả về JWT Token
     @PostMapping("/login")
-    public ResponseEntity<ResponseData> authenticateUser(@RequestBody @Valid  UserLoginDTO user, BindingResult bindingResult) {
+    public ResponseEntity<ResponseData> authenticateUser(@RequestBody @Valid UserLoginDTO user,
+            BindingResult bindingResult) {
         try {
             List<String> errors = new ArrayList<>();
             if (bindingResult.hasErrors()) {
@@ -127,8 +126,6 @@ public class AuthController {
         }
     }
 
-
-
     // Kiểm tra quyền người dùng
     @GetMapping("/user-info")
     public ResponseEntity<UserDTO> getUserInfo(HttpServletRequest request) {
@@ -136,9 +133,9 @@ public class AuthController {
         String token = request.getHeader("Authorization");
         System.out.println(token);
         if (token == null || !token.startsWith("Bearer ")) {
-            return ResponseEntity.status(400).body(null);  // Trả về lỗi nếu không có token hoặc token sai định dạng
+            return ResponseEntity.status(400).body(null); // Trả về lỗi nếu không có token hoặc token sai định dạng
         }
-        token = token.substring(7);  // Lấy token sau "Bearer "
+        token = token.substring(7); // Lấy token sau "Bearer "
 
         // Lấy userId từ token
         String userId = jwtAuthService.getUserIdFromToken(token);
@@ -148,7 +145,7 @@ public class AuthController {
 
         // Kiểm tra nếu người dùng không tồn tại
         if (optionalUser.isEmpty()) {
-            return ResponseEntity.notFound().build();  // Trả về 404 nếu không tìm thấy người dùng
+            return ResponseEntity.notFound().build(); // Trả về 404 nếu không tìm thấy người dùng
         }
 
         // Lấy user từ Optional
@@ -163,20 +160,27 @@ public class AuthController {
         try {
             System.out.println("user dto register: " + dto);
             List<String> errors = new ArrayList<>();
+
+            // Kiểm tra tuổi
+            if (!dto.isAgeValid()) {
+                errors.add("Bạn phải đủ 18 tuổi để đăng ký.");
+            }
+
             if (bindingResult.hasErrors()) {
                 // Trả về danh sách lỗi
-                errors = bindingResult.getFieldErrors().stream()
+                errors.addAll(bindingResult.getFieldErrors().stream()
                         .map(err -> err.getField() + ": " + err.getDefaultMessage())
-                        .collect(Collectors.toList());
+                        .collect(Collectors.toList()));
             }
+
             if (dto.getEmailOrPhone() == null) {
                 errors.add("Phải bao gồm số di động hoặc email");
             } else {
-                // Kiểm tra xem chuỗi có phải số điện thoại hợp lệ (chỉ chứa số và độ dài chính xác 10 chữ số)
+                // Kiểm tra số điện thoại hợp lệ
                 boolean isPhone = dto.getEmailOrPhone().matches("^0\\d{9}$");
-
-                // Kiểm tra chuỗi có phải là email hợp lệ
-                boolean isEmail = dto.getEmailOrPhone().matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA0-9]{2,7}$");
+                // Kiểm tra email hợp lệ
+                boolean isEmail = dto.getEmailOrPhone()
+                        .matches("^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA0-9]{2,7}$");
 
                 if (!isPhone && !isEmail) {
                     errors.add("Email hoặc số điện thoại không hợp lệ");
@@ -184,9 +188,9 @@ public class AuthController {
             }
 
             if (dto.getEmailOrPhone() != null && !userService.findByEmailOrPhone(dto.getEmailOrPhone()).isEmpty()) {
-                System.out.println("1");
                 errors.add("Email hoặc số điện thoại đã tồn tại");
             }
+
             // Nếu có lỗi, trả về lỗi
             if (!errors.isEmpty()) {
                 responseData.setData(errors);
@@ -200,7 +204,7 @@ public class AuthController {
 
             // Mã hóa mật khẩu
             String encodedPassword = passwordEncoder.encode(dto.getPassword());
-            dto.setPassword(encodedPassword);  // Đặt mật khẩu đã mã hóa
+            dto.setPassword(encodedPassword); // Đặt mật khẩu đã mã hóa
             Optional<UserDTO> savedUser = userService.addRegisterUser(dto);
 
             if (savedUser.isPresent()) {
