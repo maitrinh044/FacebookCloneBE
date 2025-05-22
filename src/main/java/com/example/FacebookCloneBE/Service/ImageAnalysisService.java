@@ -22,7 +22,7 @@ public class ImageAnalysisService {
 
     // private static final String CREDENTIALS_PATH = "\"C:\\Users\\CAM
     // TRI\\Downloads\\facebookclone-460009-eaad8455be57.json\"";
-    private static final String CREDENTIALS_PATH = "C:\\Users\\CAM TRI\\Downloads\\facebookclone-460009-eaad8455be57.json";
+    private static final String CREDENTIALS_PATH = "D:\\HOCHANH\\XDPMTMHPL\\facebookclone-460009-eaad8455be57.json";
     private static final String PROJECT_ID = "facebookclone-460009"; // Thay bằng project ID của bạn
 
     public static String analyzeImage(String imageUrl) {

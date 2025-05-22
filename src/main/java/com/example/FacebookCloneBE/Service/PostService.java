@@ -204,7 +204,7 @@ public class PostService {
     public Optional<CountSharePost> getCountSharePost(Long postId) {
         try {
             List<Object[]> results = postRepository.getCountSharePost(postId);
-            System.out.println("Result of count share post: " + results.size());
+//            System.out.println("Result of count share post: " + results.size());
             if (results.isEmpty()) {
                 return Optional.empty(); // Trả về Optional.empty() nếu không có kết quả
             }
