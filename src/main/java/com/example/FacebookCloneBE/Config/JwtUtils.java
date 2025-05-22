@@ -1,7 +1,6 @@
 package com.example.FacebookCloneBE.Config;
 
 import com.example.FacebookCloneBE.DTO.UserDTO.UserDTO;
-import com.example.FacebookCloneBE.Model.User;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -81,5 +80,6 @@ public class JwtUtils {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 }
 
